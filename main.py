@@ -118,21 +118,37 @@ def run_analysis():
     # Step 4: Send notification via Telegram bot
     logger.info("Step 4: Sending reports to Telegram subscribers...")
     try:
-        if TELEGRAM_BOT_TOKEN:
+        if not TELEGRAM_BOT_TOKEN:
+            logger.error("❌ TELEGRAM_BOT_TOKEN is not set!")
+            logger.error("❌ Please set TELEGRAM_BOT_TOKEN in GitHub Secrets")
+            logger.warning("Skipping Telegram notifications.")
+        else:
+            logger.info(f"✅ TELEGRAM_BOT_TOKEN is set (length: {len(TELEGRAM_BOT_TOKEN)} chars)")
             from telegram_bot import TelegramBot
             import asyncio
             
+            logger.info("Initializing TelegramBot...")
             bot = TelegramBot()
+            logger.info("TelegramBot initialized successfully")
+            
             # Send report to all subscribers
+            logger.info("Creating event loop...")
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
+            logger.info("Event loop created, sending reports...")
+            
             sent_count = loop.run_until_complete(bot.send_report_to_all_subscribers(summary_report))
+            
+            logger.info("Closing event loop...")
             loop.close()
-            logger.info(f"Report sent to {sent_count} Telegram subscribers")
-        else:
-            logger.warning("TELEGRAM_BOT_TOKEN not set. Skipping Telegram notifications.")
+            logger.info(f"📊 Report sending complete: {sent_count} Telegram subscribers received the report")
+            
+            if sent_count == 0:
+                logger.error("❌ No reports were sent! Check logs above for details.")
     except Exception as e:
-        logger.error(f"Error sending reports to Telegram: {e}")
+        logger.error(f"❌ Error sending reports to Telegram: {e}")
+        import traceback
+        logger.error(f"❌ Traceback: {traceback.format_exc()}")
     
     logger.info("Analysis pipeline completed")
 
