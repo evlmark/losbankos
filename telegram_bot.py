@@ -80,28 +80,142 @@ class TelegramBot:
                     json.dump({'subscribers': subscribers}, f, indent=2)
                 logger.info(f"Added subscriber: {chat_id}")
                 # Try to commit to git if in a git repo (for GitHub Actions)
-                try:
-                    import subprocess
-                    repo_root = Path(__file__).parent
-                    if (repo_root / '.git').exists():
-                        subprocess.run(
-                            ['git', 'add', str(self.subscribers_file)],
-                            cwd=repo_root,
-                            capture_output=True,
-                            timeout=5
-                        )
-                        subprocess.run(
-                            ['git', 'commit', '-m', f'Auto: Add subscriber {chat_id}'],
-                            cwd=repo_root,
-                            capture_output=True,
-                            timeout=5
-                        )
-                        logger.info(f"Subscriber file committed to git")
-                except Exception as git_error:
-                    # Git operations are optional, don't fail if they don't work
-                    logger.debug(f"Could not auto-commit subscriber file: {git_error}")
+                self._sync_subscribers_to_git(chat_id)
             except Exception as e:
                 logger.error(f"Error saving subscriber: {chat_id}: {e}")
+    
+    def _sync_subscribers_to_git(self, chat_id: int):
+        """
+        Try to sync subscribers file to git repository
+        This ensures GitHub Actions has the latest subscriber list
+        """
+        try:
+            import subprocess
+            repo_root = Path(__file__).parent
+            
+            if not (repo_root / '.git').exists():
+                logger.warning("Not a git repository - cannot auto-sync subscribers to GitHub")
+                logger.warning("Please manually commit telegram_subscribers.json after subscribing")
+                return False
+            
+            # Check git status
+            git_status = subprocess.run(
+                ['git', 'status', '--porcelain', str(self.subscribers_file)],
+                cwd=repo_root,
+                capture_output=True,
+                text=True,
+                timeout=5
+            )
+            
+            if git_status.returncode != 0:
+                logger.warning(f"Git status check failed: {git_status.stderr}")
+                return False
+            
+            # Add file
+            git_add = subprocess.run(
+                ['git', 'add', str(self.subscribers_file)],
+                cwd=repo_root,
+                capture_output=True,
+                text=True,
+                timeout=5
+            )
+            
+            if git_add.returncode != 0:
+                logger.warning(f"Git add failed: {git_add.stderr}")
+                return False
+            
+            # Commit
+            git_commit = subprocess.run(
+                ['git', 'commit', '-m', f'Auto: Add subscriber {chat_id}'],
+                cwd=repo_root,
+                capture_output=True,
+                text=True,
+                timeout=5
+            )
+            
+            if git_commit.returncode != 0:
+                # Check if there are changes to commit
+                if "nothing to commit" in git_commit.stdout.lower():
+                    logger.info("Subscriber file already committed")
+                    return True
+                logger.warning(f"Git commit failed: {git_commit.stderr}")
+                return False
+            
+            logger.info(f"✅ Subscriber file committed to git successfully")
+            
+            # Try to push (may fail if no credentials, but that's OK)
+            try:
+                git_push = subprocess.run(
+                    ['git', 'push', 'origin', 'main'],
+                    cwd=repo_root,
+                    capture_output=True,
+                    text=True,
+                    timeout=10
+                )
+                
+                if git_push.returncode == 0:
+                    logger.info(f"✅ Subscriber file pushed to GitHub successfully")
+                    return True
+                else:
+                    logger.warning(f"⚠️  Git push failed (this is OK on Render without credentials): {git_push.stderr}")
+                    logger.warning(f"⚠️  Please manually push telegram_subscribers.json to GitHub")
+                    return False
+            except Exception as push_error:
+                logger.warning(f"⚠️  Could not push to GitHub (this is OK): {push_error}")
+                logger.warning(f"⚠️  Please manually push telegram_subscribers.json to GitHub")
+                return False
+                
+        except Exception as git_error:
+            # Git operations are optional, don't fail if they don't work
+            logger.warning(f"⚠️  Could not auto-sync subscriber file to git: {git_error}")
+            logger.warning(f"⚠️  Please manually commit and push telegram_subscribers.json to GitHub")
+            return False
+    
+    def check_sync_status(self) -> dict:
+        """
+        Check if subscribers file is synced with git
+        Returns status information
+        """
+        status = {
+            'file_exists': False,
+            'is_git_repo': False,
+            'has_changes': False,
+            'is_committed': False,
+            'subscriber_count': 0
+        }
+        
+        try:
+            # Check if file exists
+            if self.subscribers_file.exists():
+                status['file_exists'] = True
+                subscribers = self.load_subscribers()
+                status['subscriber_count'] = len(subscribers)
+            
+            # Check if git repo
+            repo_root = Path(__file__).parent
+            if (repo_root / '.git').exists():
+                status['is_git_repo'] = True
+                
+                # Check git status
+                import subprocess
+                git_status = subprocess.run(
+                    ['git', 'status', '--porcelain', str(self.subscribers_file)],
+                    cwd=repo_root,
+                    capture_output=True,
+                    text=True,
+                    timeout=5
+                )
+                
+                if git_status.returncode == 0:
+                    if git_status.stdout.strip():
+                        status['has_changes'] = True
+                    else:
+                        status['is_committed'] = True
+                        
+        except Exception as e:
+            logger.debug(f"Error checking sync status: {e}")
+        
+        return status
     
     def get_latest_report(self) -> Optional[Path]:
         """Get the latest combined report"""
