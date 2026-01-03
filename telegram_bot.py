@@ -240,20 +240,40 @@ class TelegramBot:
     
     def run_polling(self):
         """Start bot polling (for interactive mode)"""
+        import asyncio
+        import time
+        
         logger.info("Starting Telegram bot polling...")
-        try:
-            self.application.run_polling(
-                allowed_updates=Update.ALL_TYPES,
-                drop_pending_updates=True,  # Drop pending updates to avoid conflicts
-                close_loop=False
-            )
-        except Exception as e:
-            logger.error(f"Error in polling: {e}")
-            # If conflict error, wait and retry
-            if "Conflict" in str(e) or "getUpdates" in str(e):
-                logger.warning("Bot conflict detected. This usually means another instance is running.")
-                logger.warning("If deploying to Render, make sure only one instance is running.")
-            raise
+        
+        # Retry logic for conflicts during deployment
+        max_retries = 3
+        retry_delay = 5  # seconds
+        
+        for attempt in range(max_retries):
+            try:
+                self.application.run_polling(
+                    allowed_updates=Update.ALL_TYPES,
+                    drop_pending_updates=True,  # Drop pending updates to avoid conflicts
+                    close_loop=False
+                )
+                break  # Success, exit retry loop
+            except Exception as e:
+                error_str = str(e)
+                if "Conflict" in error_str or "getUpdates" in error_str:
+                    if attempt < max_retries - 1:
+                        logger.warning(f"Bot conflict detected (attempt {attempt + 1}/{max_retries}). Waiting {retry_delay}s before retry...")
+                        logger.warning("This is normal during deployment - old instance is still stopping.")
+                        time.sleep(retry_delay)
+                        retry_delay *= 2  # Exponential backoff
+                        continue
+                    else:
+                        logger.error("Bot conflict persists after retries. Another instance may be running.")
+                        logger.error("If deploying to Render, wait a few minutes for old instance to stop.")
+                        raise
+                else:
+                    # Other errors, don't retry
+                    logger.error(f"Error in polling: {e}")
+                    raise
 
 
 def run_bot():
