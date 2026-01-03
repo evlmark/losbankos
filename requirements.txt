@@ -8,7 +8,7 @@ openai==1.12.0
 anthropic==0.18.1
 
 # Telegram
-python-telegram-bot==20.7
+python-telegram-bot>=21.0
 
 # Slack
 slack-sdk==3.27.1
