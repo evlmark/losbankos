@@ -241,7 +241,19 @@ class TelegramBot:
     def run_polling(self):
         """Start bot polling (for interactive mode)"""
         logger.info("Starting Telegram bot polling...")
-        self.application.run_polling(allowed_updates=Update.ALL_TYPES)
+        try:
+            self.application.run_polling(
+                allowed_updates=Update.ALL_TYPES,
+                drop_pending_updates=True,  # Drop pending updates to avoid conflicts
+                close_loop=False
+            )
+        except Exception as e:
+            logger.error(f"Error in polling: {e}")
+            # If conflict error, wait and retry
+            if "Conflict" in str(e) or "getUpdates" in str(e):
+                logger.warning("Bot conflict detected. This usually means another instance is running.")
+                logger.warning("If deploying to Render, make sure only one instance is running.")
+            raise
 
 
 def run_bot():
