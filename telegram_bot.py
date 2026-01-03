@@ -323,34 +323,42 @@ class TelegramBot:
             # Telegram has a 4096 character limit, so we need to split long messages
             max_length = 4096
             
+            logger.debug(f"Sending message to {chat_id}, length: {len(message)} chars")
+            
             if len(message) <= max_length:
-                await self.bot.send_message(
+                result = await self.bot.send_message(
                     chat_id=chat_id,
                     text=message,
                     parse_mode=parse_mode
                 )
+                logger.debug(f"Message sent successfully, message_id: {result.message_id}")
             else:
                 # Split message into chunks
                 chunks = [message[i:i+max_length] for i in range(0, len(message), max_length)]
+                logger.info(f"Message too long ({len(message)} chars), splitting into {len(chunks)} chunks")
                 for i, chunk in enumerate(chunks):
                     if i == 0:
-                        await self.bot.send_message(
+                        result = await self.bot.send_message(
                             chat_id=chat_id,
                             text=chunk,
                             parse_mode=parse_mode
                         )
                     else:
                         # For subsequent chunks, don't use parse_mode to avoid formatting issues
-                        await self.bot.send_message(
+                        result = await self.bot.send_message(
                             chat_id=chat_id,
                             text=chunk
                         )
+                    logger.debug(f"Chunk {i+1}/{len(chunks)} sent, message_id: {result.message_id}")
             
-            logger.info(f"Message sent to Telegram chat {chat_id} successfully")
+            logger.info(f"✅ Message sent to Telegram chat {chat_id} successfully")
             return True
             
         except Exception as e:
-            logger.error(f"Error sending message to Telegram: {e}")
+            logger.error(f"❌ Error sending message to Telegram chat {chat_id}: {e}")
+            logger.error(f"❌ Error type: {type(e).__name__}")
+            import traceback
+            logger.error(f"❌ Traceback: {traceback.format_exc()}")
             return False
     
     async def send_report_to_all_subscribers(self, report_content: str) -> int:
