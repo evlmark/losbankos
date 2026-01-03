@@ -1,0 +1,83 @@
+{
+  "competitors": [
+    {
+      "name": "BBVA GEMA",
+      "store_type": "googleplay",
+      "app_id": "com.bbva.GEMA",
+      "country": "mx",
+      "lang": "es"
+    },
+    {
+      "name": "BBVA GEMA",
+      "store_type": "appstore",
+      "app_id": "1459550683",
+      "country": "mx"
+    },
+    {
+      "name": "Fondeadora",
+      "store_type": "googleplay",
+      "app_id": "com.fondeadora.f4b_mobile_app",
+      "country": "mx",
+      "lang": "es"
+    },
+    {
+      "name": "Fondeadora",
+      "store_type": "appstore",
+      "app_id": "6444777572",
+      "country": "mx"
+    },
+    {
+      "name": "Konfio",
+      "store_type": "googleplay",
+      "app_id": "com.konfio.credito",
+      "country": "mx",
+      "lang": "es"
+    },
+    {
+      "name": "Konfio",
+      "store_type": "appstore",
+      "app_id": "1499151815",
+      "country": "mx"
+    },
+    {
+      "name": "Banamex",
+      "store_type": "googleplay",
+      "app_id": "com.citibanamex.bnemobile",
+      "country": "mx",
+      "lang": "es"
+    },
+    {
+      "name": "Banamex",
+      "store_type": "appstore",
+      "app_id": "1088404293",
+      "country": "mx"
+    },
+    {
+      "name": "Finom",
+      "store_type": "googleplay",
+      "app_id": "tech.pnlfin.finom",
+      "all_countries": true,
+      "lang": "en"
+    },
+    {
+      "name": "Finom",
+      "store_type": "appstore",
+      "app_id": "1483892148",
+      "all_countries": true
+    },
+    {
+      "name": "Revolut Business",
+      "store_type": "googleplay",
+      "app_id": "com.revolut.business",
+      "all_countries": true,
+      "lang": "en"
+    },
+    {
+      "name": "Revolut Business",
+      "store_type": "appstore",
+      "app_id": "1436969262",
+      "all_countries": true
+    }
+  ]
+}
+

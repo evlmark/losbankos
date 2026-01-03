@@ -1,0 +1,28 @@
+# Core dependencies
+python-dotenv==1.0.0
+requests==2.31.0
+schedule==1.2.0
+
+# LLM API clients
+openai==1.12.0
+anthropic==0.18.1
+
+# Telegram
+python-telegram-bot==20.7
+
+# Slack
+slack-sdk==3.27.1
+
+# App Store reviews (using RSS feed, no library needed)
+# app-store-scraper==0.3.5  # Not used - using RSS feed instead
+
+# Google Play reviews
+google-play-scraper==1.2.2
+
+# Data handling
+pandas==2.2.0
+python-dateutil==2.8.2
+
+# Logging
+loguru==0.7.2
+

@@ -1,0 +1,31 @@
+{
+  "competitors": [
+    {
+      "name": "Competitor App 1",
+      "store_type": "appstore",
+      "app_id": "1234567890",
+      "country": "us"
+    },
+    {
+      "name": "Competitor App 2",
+      "store_type": "googleplay",
+      "app_id": "com.example.app",
+      "country": "us",
+      "lang": "en"
+    },
+    {
+      "name": "Global App",
+      "store_type": "appstore",
+      "app_id": "9876543210",
+      "all_countries": true
+    },
+    {
+      "name": "Global App",
+      "store_type": "googleplay",
+      "app_id": "com.example.global",
+      "all_countries": true,
+      "lang": "en"
+    }
+  ]
+}
+
