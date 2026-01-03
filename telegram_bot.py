@@ -30,7 +30,8 @@ class TelegramBot:
         if not self.bot_token:
             raise ValueError("TELEGRAM_BOT_TOKEN is not set")
         
-        self.subscribers_file = Path(__file__).parent / "data" / "telegram_subscribers.json"
+        # Save subscribers in repo root so it persists in GitHub Actions
+        self.subscribers_file = Path(__file__).parent / "telegram_subscribers.json"
         self.subscribers_file.parent.mkdir(parents=True, exist_ok=True)
         
         # Initialize bot
