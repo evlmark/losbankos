@@ -275,19 +275,37 @@ class TelegramBot:
         await update.message.reply_text(help_text)
     
     async def subscribers_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
-        """Handle /subscribers command - show subscriber count"""
+        """Handle /subscribers command - show subscribers and sync status"""
         subscribers = self.load_subscribers()
         count = len(subscribers)
         
-        if count == 0:
-            message = "📭 Список подписчиков пуст.\n\nОтправьте /start чтобы подписаться на отчеты."
-        else:
-            message = f"👥 Количество подписчиков: {count}\n\n"
-            message += f"Подписчики: {', '.join(map(str, subscribers[:10]))}"
-            if count > 10:
-                message += f" и еще {count - 10}..."
+        # Check sync status
+        sync_status = self.check_sync_status()
         
-        await update.message.reply_text(message)
+        message_parts = []
+        
+        if count == 0:
+            message_parts.append("📭 Список подписчиков пуст.\n\nОтправьте /start чтобы подписаться на отчеты.")
+        else:
+            message_parts.append(f"👥 Количество подписчиков: {count}")
+            message_parts.append(f"Подписчики: {', '.join(map(str, subscribers[:10]))}")
+            if count > 10:
+                message_parts.append(f"и еще {count - 10}...")
+        
+        # Add sync status
+        message_parts.append("\n🔄 Статус синхронизации:")
+        if sync_status['is_git_repo']:
+            if sync_status['is_committed']:
+                message_parts.append("✅ Файл закоммичен в git")
+            elif sync_status['has_changes']:
+                message_parts.append("⚠️  Есть незакоммиченные изменения")
+                message_parts.append("   Нужно вручную: git add && git commit && git push")
+            else:
+                message_parts.append("ℹ️  Файл синхронизирован")
+        else:
+            message_parts.append("⚠️  Не git репозиторий - синхронизация невозможна")
+        
+        await update.message.reply_text("\n".join(message_parts))
     
     async def send_message(self, chat_id: int, message: str, parse_mode: str = "Markdown") -> bool:
         """
