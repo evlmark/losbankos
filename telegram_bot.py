@@ -247,22 +247,9 @@ class TelegramBot:
         logger.info(f"Sent report to {success_count}/{len(subscribers)} subscribers")
         return success_count
     
-    async def _check_bot_available(self) -> bool:
-        """Check if bot can get updates (no conflict)"""
-        try:
-            # Try to get updates with timeout=0 to check availability
-            updates = await self.bot.get_updates(timeout=0, limit=1)
-            return True
-        except Exception as e:
-            if "Conflict" in str(e) or "getUpdates" in str(e):
-                return False
-            # Other errors - assume available
-            return True
-    
     def run_polling(self):
         """Start bot polling (for interactive mode)"""
         import time
-        import asyncio
         
         logger.info("Starting Telegram bot polling...")
         
@@ -270,32 +257,7 @@ class TelegramBot:
         logger.info("Waiting 30 seconds for any old instances to stop...")
         time.sleep(30)
         
-        # Check if bot is available before starting
-        logger.info("Checking if bot is available (no conflicts)...")
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        
-        max_availability_checks = 10
-        availability_check_delay = 10  # seconds
-        
-        for check_attempt in range(max_availability_checks):
-            try:
-                is_available = loop.run_until_complete(self._check_bot_available())
-                if is_available:
-                    logger.info("Bot is available, starting polling...")
-                    break
-                else:
-                    logger.warning(f"Bot conflict detected (check {check_attempt + 1}/{max_availability_checks}). Waiting {availability_check_delay}s...")
-                    logger.warning("Another instance is still running. This is normal during deployment.")
-                    time.sleep(availability_check_delay)
-                    availability_check_delay += 5
-            except Exception as e:
-                logger.warning(f"Error checking bot availability: {e}. Will try to start anyway.")
-                break
-        
-        loop.close()
-        
-        # Now start polling
+        # Now start polling - run_polling will handle its own event loop
         try:
             logger.info("Starting polling...")
             self.application.run_polling(
@@ -307,11 +269,21 @@ class TelegramBot:
             error_str = str(e)
             if "Conflict" in error_str or "getUpdates" in error_str:
                 logger.error("Bot conflict detected during polling.")
-                logger.error("Another instance is running. Please ensure only one instance is active.")
-                logger.error("If deploying to Render, wait a few minutes and try again.")
-                # Exit gracefully instead of crashing
-                import sys
-                sys.exit(1)
+                logger.error("Another instance is running. Waiting 60 seconds and retrying...")
+                time.sleep(60)
+                # Retry once
+                try:
+                    logger.info("Retrying polling...")
+                    self.application.run_polling(
+                        allowed_updates=Update.ALL_TYPES,
+                        drop_pending_updates=True,
+                        close_loop=False
+                    )
+                except Exception as retry_error:
+                    logger.error(f"Bot conflict persists after retry: {retry_error}")
+                    logger.error("Please ensure only one instance is running.")
+                    import sys
+                    sys.exit(1)
             else:
                 logger.error(f"Error in polling: {e}")
                 raise
