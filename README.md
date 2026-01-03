@@ -237,7 +237,7 @@ pip install -r requirements.txt
    - Добавьте необходимые secrets (см. `DEPLOYMENT.md`)
 
 3. **Настройте Telegram бота:**
-   - См. подробную инструкцию в `setup_telegram_bot.md`
+   - См. подробную инструкцию в `BOT_SETUP.md`
 
 4. **Проверьте расписание:**
    - Файл `.github/workflows/weekly_reviews.yml` уже настроен

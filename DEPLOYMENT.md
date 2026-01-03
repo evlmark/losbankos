@@ -1,5 +1,35 @@
 # Инструкция по деплою и настройке автоматического запуска
 
+## 🚀 Быстрый старт
+
+### Шаг 1: Создайте репозиторий на GitHub
+
+1. Перейдите на https://github.com/new
+2. Название репозитория: `reviews-analyzer` (или любое другое)
+3. Описание: `Weekly competitor reviews analysis service with Telegram bot`
+4. Выберите **Private** или **Public**
+5. **НЕ** добавляйте README, .gitignore или лицензию (они уже есть)
+6. Нажмите **Create repository**
+
+### Шаг 2: Подключите локальный репозиторий
+
+```bash
+cd "/Users/markevlampiev/Downloads/Cursor Files/Competitors/reviews_analyzer"
+git remote add origin https://github.com/evlmark/reviews-analyzer.git
+git branch -M main
+git push -u origin main
+```
+
+### Шаг 3: Настройте GitHub Secrets
+
+1. Перейдите в **Settings** → **Secrets and variables** → **Actions**
+2. Добавьте секреты:
+   - `TELEGRAM_BOT_TOKEN` - токен вашего Telegram бота
+   - `OPENAI_API_KEY` (опционально) - для LLM саммари
+   - `ANTHROPIC_API_KEY` (опционально) - альтернатива OpenAI
+
+---
+
 ## 🚀 Варианты деплоя
 
 ### Вариант 1: GitHub Actions (Рекомендуется - бесплатно)

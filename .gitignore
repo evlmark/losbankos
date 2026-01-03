@@ -46,9 +46,16 @@ Thumbs.db
 # Test files
 test_*.py
 *_test.py
+
+# Example and sample files
 *_example.md
 sample_*.md
-appstore_reviews.txt
-bbva_gema_reviews.txt
+example_report.md
+report_with_*.md
+full_report_example.md
 report_all_companies_*.md
+
+# Temporary files
+*.txt
+push_to_github.sh
 

@@ -173,26 +173,6 @@ class TelegramBot:
             logger.error(f"Error sending message to Telegram: {e}")
             return False
     
-    def send_message_sync(self, chat_id: int, message: str, parse_mode: str = "Markdown") -> bool:
-        """
-        Send message synchronously (for use in non-async contexts)
-        
-        Args:
-            chat_id: Chat ID
-            message: Message text
-            parse_mode: Parse mode (Markdown or HTML)
-        
-        Returns:
-            True if successful, False otherwise
-        """
-        import asyncio
-        try:
-            loop = asyncio.get_event_loop()
-        except RuntimeError:
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-        return loop.run_until_complete(self.send_message(chat_id, message, parse_mode))
-    
     async def send_report_to_all_subscribers(self, report_content: str) -> int:
         """
         Send report to all subscribers
@@ -223,10 +203,6 @@ class TelegramBot:
         """Start bot polling (for interactive mode)"""
         logger.info("Starting Telegram bot polling...")
         self.application.run_polling(allowed_updates=Update.ALL_TYPES)
-    
-    async def send_report_async(self, report_content: str) -> int:
-        """Send report to all subscribers (async version for use in main script)"""
-        return await self.send_report_to_all_subscribers(report_content)
 
 
 def run_bot():
