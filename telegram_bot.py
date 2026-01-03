@@ -325,31 +325,64 @@ class TelegramBot:
             
             logger.debug(f"Sending message to {chat_id}, length: {len(message)} chars")
             
+            # For reports, use plain text to avoid Markdown parsing errors
+            # Reports may contain special characters that break Markdown parsing
+            use_parse_mode = None  # Disable parse_mode for reports to avoid parsing errors
+            
             if len(message) <= max_length:
-                result = await self.bot.send_message(
-                    chat_id=chat_id,
-                    text=message,
-                    parse_mode=parse_mode
-                )
-                logger.debug(f"Message sent successfully, message_id: {result.message_id}")
+                try:
+                    # First try with parse_mode
+                    result = await self.bot.send_message(
+                        chat_id=chat_id,
+                        text=message,
+                        parse_mode=parse_mode
+                    )
+                    logger.debug(f"Message sent successfully with {parse_mode}, message_id: {result.message_id}")
+                except Exception as parse_error:
+                    # If Markdown parsing fails, try without parse_mode
+                    if "parse" in str(parse_error).lower() or "entity" in str(parse_error).lower():
+                        logger.warning(f"Markdown parsing failed, retrying as plain text: {parse_error}")
+                        result = await self.bot.send_message(
+                            chat_id=chat_id,
+                            text=message,
+                            parse_mode=None
+                        )
+                        logger.debug(f"Message sent successfully as plain text, message_id: {result.message_id}")
+                    else:
+                        raise
             else:
                 # Split message into chunks
                 chunks = [message[i:i+max_length] for i in range(0, len(message), max_length)]
                 logger.info(f"Message too long ({len(message)} chars), splitting into {len(chunks)} chunks")
                 for i, chunk in enumerate(chunks):
-                    if i == 0:
-                        result = await self.bot.send_message(
-                            chat_id=chat_id,
-                            text=chunk,
-                            parse_mode=parse_mode
-                        )
-                    else:
-                        # For subsequent chunks, don't use parse_mode to avoid formatting issues
-                        result = await self.bot.send_message(
-                            chat_id=chat_id,
-                            text=chunk
-                        )
-                    logger.debug(f"Chunk {i+1}/{len(chunks)} sent, message_id: {result.message_id}")
+                    try:
+                        # Try with parse_mode for first chunk only
+                        if i == 0:
+                            result = await self.bot.send_message(
+                                chat_id=chat_id,
+                                text=chunk,
+                                parse_mode=parse_mode
+                            )
+                        else:
+                            # For subsequent chunks, use plain text to avoid formatting issues
+                            result = await self.bot.send_message(
+                                chat_id=chat_id,
+                                text=chunk,
+                                parse_mode=None
+                            )
+                        logger.debug(f"Chunk {i+1}/{len(chunks)} sent, message_id: {result.message_id}")
+                    except Exception as chunk_error:
+                        # If parsing fails, retry as plain text
+                        if "parse" in str(chunk_error).lower() or "entity" in str(chunk_error).lower():
+                            logger.warning(f"Markdown parsing failed for chunk {i+1}, retrying as plain text: {chunk_error}")
+                            result = await self.bot.send_message(
+                                chat_id=chat_id,
+                                text=chunk,
+                                parse_mode=None
+                            )
+                            logger.debug(f"Chunk {i+1}/{len(chunks)} sent as plain text, message_id: {result.message_id}")
+                        else:
+                            raise
             
             logger.info(f"✅ Message sent to Telegram chat {chat_id} successfully")
             return True
