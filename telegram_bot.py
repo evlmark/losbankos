@@ -247,48 +247,74 @@ class TelegramBot:
         logger.info(f"Sent report to {success_count}/{len(subscribers)} subscribers")
         return success_count
     
+    async def _check_bot_available(self) -> bool:
+        """Check if bot can get updates (no conflict)"""
+        try:
+            # Try to get updates with timeout=0 to check availability
+            updates = await self.bot.get_updates(timeout=0, limit=1)
+            return True
+        except Exception as e:
+            if "Conflict" in str(e) or "getUpdates" in str(e):
+                return False
+            # Other errors - assume available
+            return True
+    
     def run_polling(self):
         """Start bot polling (for interactive mode)"""
         import time
+        import asyncio
         
         logger.info("Starting Telegram bot polling...")
         
-        # Wait a bit before starting to let old instance stop (during deployment)
-        logger.info("Waiting 10 seconds for any old instances to stop...")
-        time.sleep(10)
+        # Wait longer before starting to let old instance stop (during deployment)
+        logger.info("Waiting 30 seconds for any old instances to stop...")
+        time.sleep(30)
         
-        # Retry logic for conflicts during deployment
-        max_retries = 5
-        retry_delay = 10  # seconds
+        # Check if bot is available before starting
+        logger.info("Checking if bot is available (no conflicts)...")
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
         
-        for attempt in range(max_retries):
+        max_availability_checks = 10
+        availability_check_delay = 10  # seconds
+        
+        for check_attempt in range(max_availability_checks):
             try:
-                logger.info(f"Starting polling (attempt {attempt + 1}/{max_retries})...")
-                self.application.run_polling(
-                    allowed_updates=Update.ALL_TYPES,
-                    drop_pending_updates=True,  # Drop pending updates to avoid conflicts
-                    close_loop=False
-                )
-                break  # Success, exit retry loop
-            except Exception as e:
-                error_str = str(e)
-                if "Conflict" in error_str or "getUpdates" in error_str:
-                    if attempt < max_retries - 1:
-                        logger.warning(f"Bot conflict detected (attempt {attempt + 1}/{max_retries}). Waiting {retry_delay}s before retry...")
-                        logger.warning("This is normal during deployment - old instance is still stopping.")
-                        time.sleep(retry_delay)
-                        retry_delay += 5  # Increase delay each time
-                        continue
-                    else:
-                        logger.error("Bot conflict persists after retries. Another instance may be running.")
-                        logger.error("If deploying to Render, wait a few minutes for old instance to stop.")
-                        # Don't raise - let it continue, conflict will resolve when old instance stops
-                        logger.info("Continuing anyway - conflict should resolve when old instance stops.")
-                        return
+                is_available = loop.run_until_complete(self._check_bot_available())
+                if is_available:
+                    logger.info("Bot is available, starting polling...")
+                    break
                 else:
-                    # Other errors, don't retry
-                    logger.error(f"Error in polling: {e}")
-                    raise
+                    logger.warning(f"Bot conflict detected (check {check_attempt + 1}/{max_availability_checks}). Waiting {availability_check_delay}s...")
+                    logger.warning("Another instance is still running. This is normal during deployment.")
+                    time.sleep(availability_check_delay)
+                    availability_check_delay += 5
+            except Exception as e:
+                logger.warning(f"Error checking bot availability: {e}. Will try to start anyway.")
+                break
+        
+        loop.close()
+        
+        # Now start polling
+        try:
+            logger.info("Starting polling...")
+            self.application.run_polling(
+                allowed_updates=Update.ALL_TYPES,
+                drop_pending_updates=True,  # Drop pending updates to avoid conflicts
+                close_loop=False
+            )
+        except Exception as e:
+            error_str = str(e)
+            if "Conflict" in error_str or "getUpdates" in error_str:
+                logger.error("Bot conflict detected during polling.")
+                logger.error("Another instance is running. Please ensure only one instance is active.")
+                logger.error("If deploying to Render, wait a few minutes and try again.")
+                # Exit gracefully instead of crashing
+                import sys
+                sys.exit(1)
+            else:
+                logger.error(f"Error in polling: {e}")
+                raise
 
 
 def run_bot():
