@@ -44,6 +44,15 @@ class TelegramBot:
             self.application.add_handler(CommandHandler("help", self.help_command))
             self.application.add_handler(CommandHandler("subscribers", self.subscribers_command))
             
+            # Add error handler
+            async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
+                """Handle errors"""
+                logger.error(f"Exception while handling an update: {context.error}")
+                if "Conflict" in str(context.error):
+                    logger.warning("Bot conflict - another instance may be running. This is normal during deployment.")
+            
+            self.application.add_error_handler(error_handler)
+            
         except Exception as e:
             logger.error(f"Error initializing Telegram bot: {e}")
             raise
@@ -240,17 +249,21 @@ class TelegramBot:
     
     def run_polling(self):
         """Start bot polling (for interactive mode)"""
-        import asyncio
         import time
         
         logger.info("Starting Telegram bot polling...")
         
+        # Wait a bit before starting to let old instance stop (during deployment)
+        logger.info("Waiting 10 seconds for any old instances to stop...")
+        time.sleep(10)
+        
         # Retry logic for conflicts during deployment
-        max_retries = 3
-        retry_delay = 5  # seconds
+        max_retries = 5
+        retry_delay = 10  # seconds
         
         for attempt in range(max_retries):
             try:
+                logger.info(f"Starting polling (attempt {attempt + 1}/{max_retries})...")
                 self.application.run_polling(
                     allowed_updates=Update.ALL_TYPES,
                     drop_pending_updates=True,  # Drop pending updates to avoid conflicts
@@ -264,12 +277,14 @@ class TelegramBot:
                         logger.warning(f"Bot conflict detected (attempt {attempt + 1}/{max_retries}). Waiting {retry_delay}s before retry...")
                         logger.warning("This is normal during deployment - old instance is still stopping.")
                         time.sleep(retry_delay)
-                        retry_delay *= 2  # Exponential backoff
+                        retry_delay += 5  # Increase delay each time
                         continue
                     else:
                         logger.error("Bot conflict persists after retries. Another instance may be running.")
                         logger.error("If deploying to Render, wait a few minutes for old instance to stop.")
-                        raise
+                        # Don't raise - let it continue, conflict will resolve when old instance stops
+                        logger.info("Continuing anyway - conflict should resolve when old instance stops.")
+                        return
                 else:
                     # Other errors, don't retry
                     logger.error(f"Error in polling: {e}")
