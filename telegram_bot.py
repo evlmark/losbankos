@@ -364,19 +364,37 @@ class TelegramBot:
             Number of successful sends
         """
         subscribers = self.load_subscribers()
+        logger.info(f"Loading subscribers: found {len(subscribers)} subscribers")
+        
         if not subscribers:
-            logger.info("No subscribers to send report to")
+            logger.warning("⚠️  No subscribers to send report to")
+            logger.warning("⚠️  Make sure users have sent /start to the bot")
             return 0
+        
+        logger.info(f"📤 Sending report to {len(subscribers)} subscribers...")
+        logger.info(f"📊 Report length: {len(report_content)} characters")
         
         success_count = 0
         for chat_id in subscribers:
             try:
-                if await self.send_message(chat_id, report_content):
+                logger.info(f"📨 Attempting to send report to subscriber {chat_id}...")
+                result = await self.send_message(chat_id, report_content)
+                if result:
                     success_count += 1
+                    logger.info(f"✅ Successfully sent report to subscriber {chat_id}")
+                else:
+                    logger.error(f"❌ Failed to send report to subscriber {chat_id} (send_message returned False)")
             except Exception as e:
-                logger.error(f"Error sending to subscriber {chat_id}: {e}")
+                logger.error(f"❌ Error sending to subscriber {chat_id}: {e}")
+                logger.error(f"❌ Error type: {type(e).__name__}")
+                import traceback
+                logger.error(f"❌ Traceback: {traceback.format_exc()}")
         
-        logger.info(f"Sent report to {success_count}/{len(subscribers)} subscribers")
+        logger.info(f"📊 Report sending complete: {success_count}/{len(subscribers)} successful")
+        if success_count == 0:
+            logger.error("❌ No reports were sent successfully!")
+            logger.error("❌ Check logs above for error details")
+        
         return success_count
     
     def run_polling(self):
