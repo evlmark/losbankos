@@ -69,6 +69,27 @@ class TelegramBot:
                 with open(self.subscribers_file, 'w', encoding='utf-8') as f:
                     json.dump({'subscribers': subscribers}, f, indent=2)
                 logger.info(f"Added subscriber: {chat_id}")
+                # Try to commit to git if in a git repo (for GitHub Actions)
+                try:
+                    import subprocess
+                    repo_root = Path(__file__).parent
+                    if (repo_root / '.git').exists():
+                        subprocess.run(
+                            ['git', 'add', str(self.subscribers_file)],
+                            cwd=repo_root,
+                            capture_output=True,
+                            timeout=5
+                        )
+                        subprocess.run(
+                            ['git', 'commit', '-m', f'Auto: Add subscriber {chat_id}'],
+                            cwd=repo_root,
+                            capture_output=True,
+                            timeout=5
+                        )
+                        logger.info(f"Subscriber file committed to git")
+                except Exception as git_error:
+                    # Git operations are optional, don't fail if they don't work
+                    logger.debug(f"Could not auto-commit subscriber file: {git_error}")
             except Exception as e:
                 logger.error(f"Error saving subscriber: {chat_id}: {e}")
     
