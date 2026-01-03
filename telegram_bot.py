@@ -42,6 +42,7 @@ class TelegramBot:
             # Add command handlers
             self.application.add_handler(CommandHandler("start", self.start_command))
             self.application.add_handler(CommandHandler("help", self.help_command))
+            self.application.add_handler(CommandHandler("subscribers", self.subscribers_command))
             
         except Exception as e:
             logger.error(f"Error initializing Telegram bot: {e}")
@@ -144,10 +145,26 @@ class TelegramBot:
             "📚 Справка по боту\n\n"
             "Команды:\n"
             "/start - подписаться на отчеты и получить последний отчет\n"
-            "/help - показать эту справку\n\n"
+            "/help - показать эту справку\n"
+            "/subscribers - показать количество подписчиков (только для администратора)\n\n"
             "Бот автоматически отправляет новые отчеты всем подписанным пользователям."
         )
         await update.message.reply_text(help_text)
+    
+    async def subscribers_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """Handle /subscribers command - show subscriber count"""
+        subscribers = self.load_subscribers()
+        count = len(subscribers)
+        
+        if count == 0:
+            message = "📭 Список подписчиков пуст.\n\nОтправьте /start чтобы подписаться на отчеты."
+        else:
+            message = f"👥 Количество подписчиков: {count}\n\n"
+            message += f"Подписчики: {', '.join(map(str, subscribers[:10]))}"
+            if count > 10:
+                message += f" и еще {count - 10}..."
+        
+        await update.message.reply_text(message)
     
     async def send_message(self, chat_id: int, message: str, parse_mode: str = "Markdown") -> bool:
         """
