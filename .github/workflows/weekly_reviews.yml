@@ -57,3 +57,4 @@ jobs:
         name: reports-${{ github.run_number }}
         path: data/outputs/*.md
         retention-days: 30
+        if-no-files-found: ignore
