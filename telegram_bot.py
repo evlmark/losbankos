@@ -34,6 +34,9 @@ class TelegramBot:
         self.subscribers_file = Path(__file__).parent / "telegram_subscribers.json"
         self.subscribers_file.parent.mkdir(parents=True, exist_ok=True)
         
+        # Try to update reports from repository (for Render deployment)
+        self._update_reports_from_repo()
+        
         # Initialize bot
         try:
             self.application = Application.builder().token(self.bot_token).build()
@@ -293,6 +296,35 @@ class TelegramBot:
             logger.debug(f"Error checking sync status: {e}")
         
         return status
+    
+    def _update_reports_from_repo(self):
+        """
+        Try to pull latest reports from repository (for Render deployment).
+        This ensures bot has access to latest reports even if they were created in GitHub Actions.
+        """
+        try:
+            import subprocess
+            repo_root = Path(__file__).parent
+            
+            if (repo_root / '.git').exists():
+                logger.info("Updating reports from repository...")
+                git_pull = subprocess.run(
+                    ['git', 'pull', 'origin', 'main'],
+                    cwd=repo_root,
+                    capture_output=True,
+                    text=True,
+                    timeout=10
+                )
+                
+                if git_pull.returncode == 0:
+                    logger.info("✅ Reports updated from repository")
+                else:
+                    logger.warning(f"⚠️  Could not pull reports from repository: {git_pull.stderr}")
+            else:
+                logger.debug("Not a git repository, skipping git pull")
+        except Exception as e:
+            logger.debug(f"Could not update reports from repository: {e}")
+            # This is OK - reports might already be up to date or git might not be available
     
     def get_latest_report(self) -> Optional[Path]:
         """
