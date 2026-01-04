@@ -36,7 +36,7 @@ class SupabaseClient:
     def get_subscribers(self) -> List[int]:
         """Get list of active subscriber chat IDs"""
         try:
-            response = self.client.table("subscribers")\
+            response = self.client.from_("subscribers")\
                 .select("chat_id")\
                 .eq("is_active", True)\
                 .execute()
@@ -52,14 +52,14 @@ class SupabaseClient:
         """Add a new subscriber or update existing one"""
         try:
             # Check if subscriber already exists
-            existing = self.client.table("subscribers")\
+            existing = self.client.from_("subscribers")\
                 .select("id, is_active")\
                 .eq("chat_id", chat_id)\
                 .execute()
             
             if existing.data:
                 # Update existing subscriber
-                self.client.table("subscribers")\
+                self.client.from_("subscribers")\
                     .update({
                         "is_active": True,
                         "subscribed_at": datetime.now().isoformat(),
@@ -70,7 +70,7 @@ class SupabaseClient:
                 logger.info(f"Updated subscriber: {chat_id}")
             else:
                 # Insert new subscriber
-                self.client.table("subscribers")\
+                self.client.from_("subscribers")\
                     .insert({
                         "chat_id": chat_id,
                         "is_active": True,
@@ -87,7 +87,7 @@ class SupabaseClient:
     def get_subscriber_count(self) -> int:
         """Get count of active subscribers"""
         try:
-            response = self.client.table("subscribers")\
+            response = self.client.from_("subscribers")\
                 .select("id", count="exact")\
                 .eq("is_active", True)\
                 .execute()
@@ -107,12 +107,12 @@ class SupabaseClient:
         try:
             # If this is latest, mark all other reports for this app as not latest
             if is_latest:
-                self.client.table("reports")\
+                self.client.from_("reports")\
                     .update({"is_latest": False})\
                     .eq("app_name", app_name)\
                     .execute()
             
-            response = self.client.table("reports")\
+            response = self.client.from_("reports")\
                 .insert({
                     "app_name": app_name,
                     "report_content": report_content,
@@ -140,11 +140,11 @@ class SupabaseClient:
         try:
             # If this is latest, mark all other combined reports as not latest
             if is_latest:
-                self.client.table("combined_reports")\
+                self.client.from_("combined_reports")\
                     .update({"is_latest": False})\
                     .execute()
             
-            response = self.client.table("combined_reports")\
+            response = self.client.from_("combined_reports")\
                 .insert({
                     "report_content": report_content,
                     "report_date": datetime.now().isoformat(),
@@ -166,7 +166,7 @@ class SupabaseClient:
     def get_latest_combined_report(self) -> Optional[str]:
         """Get latest combined report content"""
         try:
-            response = self.client.table("combined_reports")\
+            response = self.client.from_("combined_reports")\
                 .select("report_content")\
                 .eq("is_latest", True)\
                 .order("report_date", desc=True)\
@@ -178,7 +178,7 @@ class SupabaseClient:
                 return response.data[0]["report_content"]
             
             # Fallback: get most recent report if no latest flag
-            response = self.client.table("combined_reports")\
+            response = self.client.from_("combined_reports")\
                 .select("report_content")\
                 .order("report_date", desc=True)\
                 .limit(1)\
@@ -197,7 +197,7 @@ class SupabaseClient:
     def get_latest_report_by_app(self, app_name: str) -> Optional[str]:
         """Get latest report for specific app"""
         try:
-            response = self.client.table("reports")\
+            response = self.client.from_("reports")\
                 .select("report_content")\
                 .eq("app_name", app_name)\
                 .eq("is_latest", True)\
@@ -209,7 +209,7 @@ class SupabaseClient:
                 return response.data[0]["report_content"]
             
             # Fallback: get most recent report
-            response = self.client.table("reports")\
+            response = self.client.from_("reports")\
                 .select("report_content")\
                 .eq("app_name", app_name)\
                 .order("report_date", desc=True)\
@@ -227,7 +227,7 @@ class SupabaseClient:
     def update_subscriber_last_report_sent(self, chat_id: int):
         """Update last_report_sent_at timestamp for subscriber"""
         try:
-            self.client.table("subscribers")\
+            self.client.from_("subscribers")\
                 .update({
                     "last_report_sent_at": datetime.now().isoformat(),
                     "updated_at": datetime.now().isoformat()
