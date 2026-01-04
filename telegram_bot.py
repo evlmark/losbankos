@@ -257,7 +257,8 @@ class TelegramBot:
             'is_git_repo': False,
             'has_changes': False,
             'is_committed': False,
-            'subscriber_count': 0
+            'subscriber_count': 0,
+            'git_token_set': bool(GIT_TOKEN)
         }
         
         try:
@@ -374,10 +375,11 @@ class TelegramBot:
         # Add sync status
         message_parts.append("\n🔄 Статус синхронизации:")
         
-        if status['git_token_set']:
+        if sync_status.get('git_token_set', False):
             message_parts.append("✅ GIT_TOKEN настроен - автоматическая синхронизация включена")
         else:
             message_parts.append("⚠️  GIT_TOKEN не настроен - добавьте его в Render Environment Variables")
+        
         if sync_status['is_git_repo']:
             if sync_status['is_committed']:
                 message_parts.append("✅ Файл закоммичен в git")
