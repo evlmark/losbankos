@@ -33,18 +33,35 @@ class ReportGenerator:
         if not text or not text.strip():
             return text
         
-        # If text is already in English (simple check), return as is
-        # This is a simple heuristic - you might want to improve it
-        if len(text) < 50:
-            # For short texts, try to translate
+        # Check if text is likely already in English
+        # Look for Spanish/French/German/Portuguese words that indicate non-English
+        text_lower = text.lower()
+        non_english_indicators = [
+            # Spanish
+            'que', 'para', 'con', 'por', 'muy', 'bien', 'mal', 'no', 'si', 'es', 'está', 'son', 'tiene',
+            'puedo', 'puede', 'hacer', 'funciona', 'aplicación', 'cuenta', 'tarjeta', 'servicio',
+            # French
+            'que', 'pour', 'avec', 'très', 'bien', 'mal', 'est', 'sont', 'peut',
+            # German
+            'der', 'die', 'das', 'und', 'ist', 'sind', 'kann', 'nicht',
+            # Portuguese
+            'que', 'para', 'com', 'muito', 'bem', 'mal', 'não', 'é', 'está', 'são'
+        ]
+        
+        # Count non-English indicators
+        non_english_count = sum(1 for word in non_english_indicators if word in text_lower)
+        
+        # If we find many non-English indicators, definitely translate
+        if non_english_count >= 2:
+            # Definitely not English, need to translate
             pass
         else:
-            # For longer texts, check if it looks like English
-            # Simple heuristic: if it contains common English words, might be English
-            common_english_words = ['the', 'and', 'is', 'are', 'was', 'were', 'this', 'that', 'with', 'for']
-            text_lower = text.lower()
+            # Check for English words
+            common_english_words = ['the', 'and', 'is', 'are', 'was', 'were', 'this', 'that', 'with', 'for', 'have', 'has', 'can', 'will', 'would', 'should']
             english_word_count = sum(1 for word in common_english_words if word in text_lower)
-            if english_word_count >= 3:
+            
+            # If many English words and no non-English indicators, likely English
+            if english_word_count >= 4 and non_english_count == 0:
                 # Likely already in English, return as is
                 return text
         
@@ -63,7 +80,7 @@ Translation:"""
             
             translation = self.llm_analyzer.call_llm(
                 prompt,
-                system_message="You are a professional translator. Translate the given text accurately to the target language."
+                system_message="You are a professional translator. Translate the given text accurately to the target language. Return only the translation, no explanations."
             )
             
             # Clean up translation (remove quotes if LLM added them)
@@ -72,6 +89,12 @@ Translation:"""
                 translation = translation[1:-1]
             if translation.startswith("'") and translation.endswith("'"):
                 translation = translation[1:-1]
+            
+            # Remove common prefixes LLM might add
+            prefixes_to_remove = ['Translation:', 'Translated:', 'English translation:', 'In English:']
+            for prefix in prefixes_to_remove:
+                if translation.lower().startswith(prefix.lower()):
+                    translation = translation[len(prefix):].strip()
             
             return translation.strip()
         except Exception as e:
@@ -287,12 +310,20 @@ Translation:"""
                             if examples:
                                 func_name = func_names_en.get(func_key, func_key)
                                 example_text = examples[0]
-                                # Translate example if needed
+                                # Always translate example (will return original if already English)
                                 translated_example = self.translate_text(example_text, "English") if self.llm_analyzer else example_text
-                                if len(example_text) > 100:
-                                    mentioned_funcs.append(f"  - {func_name}: {example_text[:100]}... ({translated_example[:100]}...)" if translated_example != example_text else f"  - {func_name}: {example_text[:100]}...")
+                                # Always show translation in brackets if different
+                                if translated_example and translated_example != example_text:
+                                    if len(example_text) > 100:
+                                        mentioned_funcs.append(f"  - {func_name}: {example_text[:100]}... ({translated_example[:100]}...)")
+                                    else:
+                                        mentioned_funcs.append(f"  - {func_name}: {example_text} ({translated_example})")
                                 else:
-                                    mentioned_funcs.append(f"  - {func_name}: {example_text} ({translated_example})" if translated_example != example_text else f"  - {func_name}: {example_text}")
+                                    # If translation failed or same, show original
+                                    if len(example_text) > 100:
+                                        mentioned_funcs.append(f"  - {func_name}: {example_text[:100]}...")
+                                    else:
+                                        mentioned_funcs.append(f"  - {func_name}: {example_text}")
                         
                         if mentioned_funcs:
                             summary_lines.extend(mentioned_funcs[:3])  # Max 3 functionality examples
@@ -672,11 +703,13 @@ Be specific and highlight key problems. Group similar problems together. If a pr
             for i, quote_data in enumerate(sentiment_data['positive_quotes'], 1):
                 quote_text = quote_data.get('text', '')
                 if quote_text:
-                    # Translate quote if not in English
+                    # Always try to translate quotes (will return original if already English)
                     translated_quote = self.translate_text(quote_text, "English")
-                    if translated_quote != quote_text:
+                    # Always show translation in brackets if different from original
+                    if translated_quote != quote_text and translated_quote:
                         report_lines.append(f"{i}. \"{quote_text}\" ({translated_quote})")
                     else:
+                        # If translation failed or same, show original
                         report_lines.append(f"{i}. \"{quote_text}\"")
         
         report_lines.append("")
@@ -718,14 +751,21 @@ Be specific and highlight key problems. Group similar problems together. If a pr
                         func_name, example = clean_line.split(':', 1)
                         func_name = func_name.strip()
                         example = example.strip()
-                        # Translate example if needed
+                        # Always translate example (will return original if already English)
                         translated_example = self.translate_text(example, "English")
-                        if translated_example != example:
+                        # Always show translation in brackets if different
+                        if translated_example and translated_example != example:
                             report_lines.append(f"  - {func_name}: {example} ({translated_example})")
                         else:
+                            # If translation failed or same, show original
                             report_lines.append(f"  - {func_name}: {example}")
                     else:
-                        report_lines.append(f"  - {clean_line}")
+                        # Try to translate the whole line if it's not in English
+                        translated_line = self.translate_text(clean_line, "English")
+                        if translated_line and translated_line != clean_line:
+                            report_lines.append(f"  - {clean_line} ({translated_line})")
+                        else:
+                            report_lines.append(f"  - {clean_line}")
                 elif line and not line.startswith('#'):
                     report_lines.append(line)
         else:
@@ -740,11 +780,13 @@ Be specific and highlight key problems. Group similar problems together. If a pr
             for i, quote_data in enumerate(sentiment_data['negative_quotes'], 1):
                 quote_text = quote_data.get('text', '')
                 if quote_text:
-                    # Translate quote if not in English
+                    # Always try to translate quotes (will return original if already English)
                     translated_quote = self.translate_text(quote_text, "English")
-                    if translated_quote != quote_text:
+                    # Always show translation in brackets if different from original
+                    if translated_quote != quote_text and translated_quote:
                         report_lines.append(f"{i}. \"{quote_text}\" ({translated_quote})")
                     else:
+                        # If translation failed or same, show original
                         report_lines.append(f"{i}. \"{quote_text}\"")
         
         report_lines.append("")
