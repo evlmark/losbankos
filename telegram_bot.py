@@ -348,41 +348,80 @@ class TelegramBot:
     
     async def start_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """Handle /start command"""
-        chat_id = update.effective_chat.id
-        
-        # Add user to subscribers
-        self.save_subscriber(chat_id)
-        
-        # Send welcome message
-        welcome_text = (
-            "👋 Привет! Я бот для анализа отзывов конкурентов.\n\n"
-            "Я буду автоматически отправлять вам новые отчеты каждую неделю.\n\n"
-            "Команды:\n"
-            "/start - подписаться на отчеты и получить последний отчет\n"
-            "/help - показать эту справку\n\n"
-            "Загружаю последний отчет..."
-        )
-        
-        await update.message.reply_text(welcome_text)
-        
-        # Send latest report
-        latest_report = self.get_latest_report()
-        if latest_report:
-            try:
-                with open(latest_report, 'r', encoding='utf-8') as f:
-                    report_content = f.read()
-                
-                # Send report (split if too long)
-                await self.send_message(chat_id, report_content)
-                await update.message.reply_text("✅ Отчет отправлен!")
-                
-            except Exception as e:
-                logger.error(f"Error sending report: {e}")
-                await update.message.reply_text(f"❌ Ошибка при отправке отчета: {e}")
-        else:
-            await update.message.reply_text(
-                "📭 Пока нет доступных отчетов. Первый отчет будет создан при следующем запуске анализа."
+        try:
+            chat_id = update.effective_chat.id
+            logger.info(f"Received /start command from chat_id: {chat_id}")
+            
+            # Add user to subscribers
+            logger.info(f"Adding user {chat_id} to subscribers...")
+            self.save_subscriber(chat_id)
+            logger.info(f"User {chat_id} added to subscribers")
+            
+            # Send welcome message
+            welcome_text = (
+                "👋 Привет! Я бот для анализа отзывов конкурентов.\n\n"
+                "Я буду автоматически отправлять вам новые отчеты каждую неделю.\n\n"
+                "Команды:\n"
+                "/start - подписаться на отчеты и получить последний отчет\n"
+                "/help - показать эту справку\n\n"
+                "Загружаю последний отчет..."
             )
+            
+            logger.info(f"Sending welcome message to {chat_id}...")
+            await update.message.reply_text(welcome_text)
+            logger.info(f"Welcome message sent to {chat_id}")
+            
+            # Try to update reports from repository before reading
+            logger.info("Updating reports from repository...")
+            self._update_reports_from_repo()
+            
+            # Send latest report
+            logger.info("Looking for latest report...")
+            latest_report = self.get_latest_report()
+            
+            if latest_report:
+                logger.info(f"Found report: {latest_report}")
+                try:
+                    logger.info(f"Reading report file: {latest_report}")
+                    with open(latest_report, 'r', encoding='utf-8') as f:
+                        report_content = f.read()
+                    
+                    logger.info(f"Report content length: {len(report_content)} characters")
+                    
+                    # Send report (split if too long)
+                    logger.info(f"Sending report to {chat_id}...")
+                    result = await self.send_message(chat_id, report_content)
+                    
+                    if result:
+                        logger.info(f"✅ Report sent successfully to {chat_id}")
+                        await update.message.reply_text("✅ Отчет отправлен!")
+                    else:
+                        logger.error(f"❌ Failed to send report to {chat_id} (send_message returned False)")
+                        await update.message.reply_text("❌ Ошибка при отправке отчета. Попробуйте позже.")
+                    
+                except FileNotFoundError as e:
+                    logger.error(f"❌ Report file not found: {e}")
+                    await update.message.reply_text(f"❌ Файл отчета не найден: {e}")
+                except Exception as e:
+                    logger.error(f"❌ Error sending report: {e}")
+                    logger.error(f"❌ Error type: {type(e).__name__}")
+                    import traceback
+                    logger.error(f"❌ Traceback: {traceback.format_exc()}")
+                    await update.message.reply_text(f"❌ Ошибка при отправке отчета: {e}")
+            else:
+                logger.warning(f"No reports found for {chat_id}")
+                await update.message.reply_text(
+                    "📭 Пока нет доступных отчетов. Первый отчет будет создан при следующем запуске анализа."
+                )
+        except Exception as e:
+            logger.error(f"❌ Error in start_command: {e}")
+            logger.error(f"❌ Error type: {type(e).__name__}")
+            import traceback
+            logger.error(f"❌ Traceback: {traceback.format_exc()}")
+            try:
+                await update.message.reply_text(f"❌ Произошла ошибка: {e}")
+            except:
+                logger.error("❌ Could not send error message to user")
     
     async def help_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """Handle /help command"""
