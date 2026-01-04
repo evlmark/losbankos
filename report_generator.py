@@ -19,6 +19,65 @@ class ReportGenerator:
         self.history_dir.mkdir(exist_ok=True)
         self.llm_analyzer = llm_analyzer
     
+    def translate_text(self, text: str, target_language: str = "English") -> str:
+        """
+        Translate text to target language using LLM
+        
+        Args:
+            text: Text to translate
+            target_language: Target language (default: English)
+        
+        Returns:
+            Translated text, or original text if translation fails
+        """
+        if not text or not text.strip():
+            return text
+        
+        # If text is already in English (simple check), return as is
+        # This is a simple heuristic - you might want to improve it
+        if len(text) < 50:
+            # For short texts, try to translate
+            pass
+        else:
+            # For longer texts, check if it looks like English
+            # Simple heuristic: if it contains common English words, might be English
+            common_english_words = ['the', 'and', 'is', 'are', 'was', 'were', 'this', 'that', 'with', 'for']
+            text_lower = text.lower()
+            english_word_count = sum(1 for word in common_english_words if word in text_lower)
+            if english_word_count >= 3:
+                # Likely already in English, return as is
+                return text
+        
+        if not self.llm_analyzer:
+            logger.warning("LLM analyzer not available, cannot translate text")
+            return text
+        
+        try:
+            prompt = f"""Translate the following text to {target_language}. 
+Return only the translation, without any additional text or explanations.
+
+Text to translate:
+{text}
+
+Translation:"""
+            
+            translation = self.llm_analyzer.call_llm(
+                prompt,
+                system_message="You are a professional translator. Translate the given text accurately to the target language."
+            )
+            
+            # Clean up translation (remove quotes if LLM added them)
+            translation = translation.strip()
+            if translation.startswith('"') and translation.endswith('"'):
+                translation = translation[1:-1]
+            if translation.startswith("'") and translation.endswith("'"):
+                translation = translation[1:-1]
+            
+            return translation.strip()
+        except Exception as e:
+            logger.warning(f"Error translating text: {e}. Returning original text.")
+            return text
+    
     def calculate_statistics(self, reviews_data: List[Dict[str, Any]], store_type: str) -> Dict[str, Any]:
         """Calculate statistics for reviews"""
         stats = {
@@ -232,25 +291,41 @@ class ReportGenerator:
                         if mentioned_funcs:
                             summary_lines.extend(mentioned_funcs[:3])  # Max 3 functionality examples
         
-        # If no themes found, create a simple summary
+        # If no themes found, create a simple summary (in English)
         if not summary_lines:
             if sentiment == 'positive':
-                summary_lines.append("- Пользователи в целом довольны приложением")
+                summary_lines.append("- Users are generally satisfied with the app")
             else:
-                summary_lines.append("- Пользователи испытывают различные проблемы с приложением")
+                summary_lines.append("- Users experience various problems with the app")
         
-        return "\n".join(summary_lines)
+        # Translate to English if needed
+        summary_text = "\n".join(summary_lines)
+        if self.llm_analyzer:
+            try:
+                # Check if already in English
+                if any(word in summary_text.lower() for word in ['users', 'app', 'satisfied', 'problems', 'work', 'good', 'bad']):
+                    # Likely already in English
+                    return summary_text
+                else:
+                    # Translate to English
+                    return self.translate_text(summary_text, "English")
+            except Exception as e:
+                logger.warning(f"Error translating local summary: {e}")
+                return summary_text
+        
+        return summary_text
     
     def create_llm_summary(self, reviews_data: List[Dict[str, Any]], sentiment: str) -> str:
         """
         Create summary using LLM (if available) or local analysis
+        Returns summary in English
         
         Args:
             reviews_data: List of reviews
             sentiment: 'positive' or 'negative'
         
         Returns:
-            Summary text
+            Summary text in English
         """
         # Try LLM first if available
         if self.llm_analyzer:
@@ -260,45 +335,50 @@ class ReportGenerator:
                 rating = review.get('rating') or review.get('score', 0)
                 review_text = review.get('review') or review.get('content', '')
                 if review_text:
-                    reviews_text.append(f"Отзыв {i} (Рейтинг: {rating}/5): {review_text}")
+                    reviews_text.append(f"Review {i} (Rating: {rating}/5): {review_text}")
             
             if reviews_text:
                 reviews_text_str = "\n".join(reviews_text)
                 
                 if sentiment == 'positive':
-                    prompt = f"""Проанализируй следующие положительные отзывы (4-5 звезд) и создай краткое саммари основных моментов, которые пользователи отмечают как хорошие.
+                    prompt = f"""Analyze the following positive reviews (4-5 stars) and create a brief summary of the main points that users highlight as good.
 
-Отзывы:
+Reviews:
 {reviews_text_str}
 
-Создай структурированное саммари в формате:
-- [основной положительный момент 1]
-- [основной положительный момент 2]
-- [основной положительный момент 3]
-и т.д.
+Create a structured summary in the format:
+- [main positive point 1]
+- [main positive point 2]
+- [main positive point 3]
+etc.
 
-Будь конкретным и выдели ключевые темы. Если отзывов мало или они очень краткие, просто перечисли что говорят."""
+Be specific and highlight key themes. If there are few reviews or they are very brief, just list what they say. Respond in English only."""
                 else:
-                    prompt = f"""Проанализируй следующие негативные отзывы (1-2 звезды) и создай краткое саммари основных проблем, которые пользователи отмечают.
+                    prompt = f"""Analyze the following negative reviews (1-2 stars) and create a brief summary of the main problems that users highlight.
 
-Отзывы:
+Reviews:
 {reviews_text_str}
 
-Создай структурированное саммари в формате:
-- [основная проблема 1]
-- [основная проблема 2]
-- [основная проблема 3]
-и т.д.
+Create a structured summary in the format:
+- [main problem 1]
+  - [specific functionality/feature if mentioned]
+- [main problem 2]
+  - [specific functionality/feature if mentioned]
+- [main problem 3]
+etc.
 
-Будь конкретным и выдели ключевые проблемы. Группируй похожие проблемы вместе."""
+Be specific and highlight key problems. Group similar problems together. If a problem mentions specific functionality (like login, updates, cards, etc.), list it under that problem. Respond in English only."""
                 
                 try:
-                    summary = self.llm_analyzer.call_llm(prompt)
+                    summary = self.llm_analyzer.call_llm(
+                        prompt,
+                        system_message="You are an expert at analyzing user reviews. Provide clear, structured summaries in English."
+                    )
                     return summary
                 except Exception as e:
                     logger.warning(f"Error creating LLM summary, falling back to local analysis: {e}")
         
-        # Fallback to local analysis
+        # Fallback to local analysis (will be translated to English in generate_report)
         return self.create_local_summary(reviews_data, sentiment)
     
     def find_relevant_quotes(self, summary: str, reviews_data: List[Dict[str, Any]], max_quotes: int = 3) -> List[Dict[str, str]]:
@@ -459,7 +539,7 @@ class ReportGenerator:
         return None
     
     def compare_with_previous(self, current_stats: Dict[str, Any], previous_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
-        """Compare current statistics with previous week"""
+        """Compare current statistics with previous week (returns English messages)"""
         if not previous_data:
             return {
                 'has_previous': False,
@@ -474,14 +554,14 @@ class ReportGenerator:
         prev_total = prev_stats.get('total', 0)
         if current_total != prev_total:
             diff = current_total - prev_total
-            changes.append(f"Количество отзывов: {prev_total} → {current_total} ({'+' if diff > 0 else ''}{diff})")
+            changes.append(f"Total reviews: {prev_total} → {current_total} ({'+' if diff > 0 else ''}{diff})")
         
         # Compare average rating
         current_avg = current_stats.get('average_rating', 0)
         prev_avg = prev_stats.get('average_rating', 0)
         if abs(current_avg - prev_avg) > 0.1:
             diff = current_avg - prev_avg
-            changes.append(f"Средний рейтинг: {prev_avg:.2f} → {current_avg:.2f} ({'+' if diff > 0 else ''}{diff:.2f})")
+            changes.append(f"Average rating: {prev_avg:.2f} → {current_avg:.2f} ({'+' if diff > 0 else ''}{diff:.2f})")
         
         # Compare rating distribution
         current_by_rating = current_stats.get('by_rating', {})
@@ -492,7 +572,7 @@ class ReportGenerator:
             prev_count = prev_by_rating.get(rating, 0)
             if current_count != prev_count:
                 diff = current_count - prev_count
-                changes.append(f"Оценка {rating}⭐: {prev_count} → {current_count} ({'+' if diff > 0 else ''}{diff})")
+                changes.append(f"Rating {rating}⭐: {prev_count} → {current_count} ({'+' if diff > 0 else ''}{diff})")
         
         return {
             'has_previous': True,
@@ -503,7 +583,7 @@ class ReportGenerator:
     def generate_report(self, app_name: str, reviews_by_store: Dict[str, List[Dict[str, Any]]], 
                        use_llm: bool = True, llm_analyzer=None) -> str:
         """
-        Generate formatted report
+        Generate formatted report in English, simplified format without Markdown symbols
         
         Args:
             app_name: Name of the application
@@ -514,123 +594,155 @@ class ReportGenerator:
         report_lines = []
         
         # Header
-        report_lines.append("=" * 70)
         report_lines.append(f"📱 {app_name}")
-        report_lines.append("=" * 70)
-        report_lines.append(f"📅 Дата отчета: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        report_lines.append("")
+        report_lines.append(f"📅 Report Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         report_lines.append("")
         
         # Calculate total statistics
-        total_reviews = sum(len(reviews) for reviews in reviews_by_store.values())
-        report_lines.append(f"📊 **Всего отзывов за неделю: {total_reviews}**")
-        report_lines.append("")
-        
-        # Statistics by store
-        all_stats = {}
         all_reviews = []
-        
-        for store_type, reviews in reviews_by_store.items():
-            stats = self.calculate_statistics(reviews, store_type)
-            all_stats[store_type] = stats
+        for reviews in reviews_by_store.values():
             all_reviews.extend(reviews)
-            
-            store_name = "App Store" if store_type == "appstore" else "Google Play"
-            report_lines.append(f"### {store_name}")
-            report_lines.append(f"- Всего отзывов: {stats['total']}")
-            report_lines.append(f"- Средний рейтинг: {stats['average_rating']:.2f}/5")
-            report_lines.append("")
         
-        # Overall statistics
+        total_reviews = len(all_reviews)
         overall_stats = self.calculate_statistics(all_reviews, "all")
-        report_lines.append("### 📈 Разбивка по оценкам (общая)")
+        
+        report_lines.append(f"📊 Total reviews this week: {total_reviews}")
         report_lines.append("")
         
-        # Rating breakdown
-        for rating in [5, 4, 3, 2, 1]:
-            count = overall_stats['by_rating'].get(rating, 0)
-            percentage = (count / total_reviews * 100) if total_reviews > 0 else 0
-            stars = "⭐" * rating
-            report_lines.append(f"{stars} ({rating}/5): {count} отзывов ({percentage:.1f}%)")
+        # Rating breakdown (simplified)
+        positive_pct = (overall_stats['positive_count'] / total_reviews * 100) if total_reviews > 0 else 0
+        neutral_pct = (overall_stats['neutral_count'] / total_reviews * 100) if total_reviews > 0 else 0
+        negative_pct = (overall_stats['negative_count'] / total_reviews * 100) if total_reviews > 0 else 0
         
-        report_lines.append("")
-        report_lines.append(f"**Положительные (4-5⭐):** {overall_stats['positive_count']} ({overall_stats['positive_count']/total_reviews*100:.1f}%)")
-        report_lines.append(f"**Нейтральные (3⭐):** {overall_stats['neutral_count']} ({overall_stats['neutral_count']/total_reviews*100:.1f}%)")
-        report_lines.append(f"**Негативные (1-2⭐):** {overall_stats['negative_count']} ({overall_stats['negative_count']/total_reviews*100:.1f}%)")
-        report_lines.append("")
-        report_lines.append("---")
+        report_lines.append(f"Positive (4-5⭐): {overall_stats['positive_count']} ({positive_pct:.1f}%)")
+        report_lines.append(f"Neutral (3⭐): {overall_stats['neutral_count']} ({neutral_pct:.1f}%)")
+        report_lines.append(f"Negative (1-2⭐): {overall_stats['negative_count']} ({negative_pct:.1f}%)")
         report_lines.append("")
         
         # Sentiment analysis
         sentiment_data = self.analyze_sentiment(all_reviews)
         
         # Positive feedback
-        report_lines.append("### ✅ Что пишут положительно")
+        report_lines.append("✅ What users write positively")
         report_lines.append("")
         
-        if sentiment_data.get('positive_summary'):
-            # Show LLM summary
-            report_lines.append(sentiment_data['positive_summary'])
-            report_lines.append("")
+        positive_summary = sentiment_data.get('positive_summary', '')
+        if positive_summary:
+            # Translate summary to English if needed
+            if self.llm_analyzer:
+                try:
+                    # Check if summary is already in English (simple heuristic)
+                    if not any(word in positive_summary.lower() for word in ['работает', 'пользователи', 'удобство', 'качество']):
+                        # Likely already in English
+                        pass
+                    else:
+                        # Translate to English
+                        positive_summary = self.translate_text(positive_summary, "English")
+                except Exception as e:
+                    logger.warning(f"Error translating positive summary: {e}")
             
-            # Add relevant quotes if available
-            if sentiment_data.get('positive_quotes'):
-                report_lines.append("**Релевантные цитаты:**")
-                report_lines.append("")
-                for i, quote_data in enumerate(sentiment_data['positive_quotes'], 1):
-                    quote_text = quote_data.get('text', '')
-                    if quote_text:
-                        report_lines.append(f"{i}. *\"{quote_text}\"*")
-                        report_lines.append("")
+            # Format summary (remove markdown, keep structure)
+            summary_lines = positive_summary.split('\n')
+            for line in summary_lines:
+                line = line.strip()
+                if line.startswith('-'):
+                    # Remove markdown formatting
+                    line = line[1:].strip()
+                    if line.startswith('*') or line.startswith('**'):
+                        line = line.lstrip('*').strip()
+                    report_lines.append(f"- {line}")
+                elif line and not line.startswith('#'):
+                    report_lines.append(line)
         else:
-            # Fallback if no LLM summary
-            if sentiment_data.get('positive_quotes'):
-                for i, quote_data in enumerate(sentiment_data['positive_quotes'], 1):
-                    quote_text = quote_data.get('text', '')
-                    if quote_text:
-                        report_lines.append(f"{i}. *\"{quote_text}\"*")
-                        report_lines.append("")
-            else:
-                report_lines.append("Положительных отзывов с подробными комментариями не найдено.")
-                report_lines.append("")
+            report_lines.append("No detailed positive reviews found.")
         
-        report_lines.append("---")
         report_lines.append("")
         
-        # Negative feedback
-        report_lines.append("### ❌ Что пишут отрицательно")
-        report_lines.append("")
-        
-        if sentiment_data.get('negative_summary'):
-            # Show LLM summary
-            report_lines.append(sentiment_data['negative_summary'])
+        # Add relevant quotes (with translation)
+        if sentiment_data.get('positive_quotes'):
+            report_lines.append("Relevant quotes:")
             report_lines.append("")
-            
-            # Add relevant quotes if available
-            if sentiment_data.get('negative_quotes'):
-                report_lines.append("**Релевантные цитаты:**")
-                report_lines.append("")
-                for i, quote_data in enumerate(sentiment_data['negative_quotes'], 1):
-                    quote_text = quote_data.get('text', '')
-                    if quote_text:
-                        report_lines.append(f"{i}. *\"{quote_text}\"*")
-                        report_lines.append("")
-        else:
-            # Fallback if no LLM summary
-            if sentiment_data.get('negative_quotes'):
-                for i, quote_data in enumerate(sentiment_data['negative_quotes'], 1):
-                    quote_text = quote_data.get('text', '')
-                    if quote_text:
-                        report_lines.append(f"{i}. *\"{quote_text}\"*")
-                        report_lines.append("")
-            else:
-                report_lines.append("Негативных отзывов с подробными комментариями не найдено.")
-                report_lines.append("")
+            for i, quote_data in enumerate(sentiment_data['positive_quotes'], 1):
+                quote_text = quote_data.get('text', '')
+                if quote_text:
+                    # Translate quote if not in English
+                    translated_quote = self.translate_text(quote_text, "English")
+                    if translated_quote != quote_text:
+                        report_lines.append(f"{i}. \"{quote_text}\" ({translated_quote})")
+                    else:
+                        report_lines.append(f"{i}. \"{quote_text}\"")
         
-        report_lines.append("---")
+        report_lines.append("")
+        report_lines.append("❌ What users write negatively")
         report_lines.append("")
         
-        # Comparison with previous week
-        report_lines.append("### 📊 Изменения с прошлой неделей")
+        negative_summary = sentiment_data.get('negative_summary', '')
+        if negative_summary:
+            # Translate summary to English if needed
+            if self.llm_analyzer:
+                try:
+                    # Check if summary is already in English
+                    if not any(word in negative_summary.lower() for word in ['проблемы', 'пользователи', 'плохое', 'качество']):
+                        # Likely already in English
+                        pass
+                    else:
+                        # Translate to English
+                        negative_summary = self.translate_text(negative_summary, "English")
+                except Exception as e:
+                    logger.warning(f"Error translating negative summary: {e}")
+            
+            # Format summary (remove markdown, keep structure with indentation)
+            summary_lines = negative_summary.split('\n')
+            for line in summary_lines:
+                line = line.strip()
+                if line.startswith('-'):
+                    # Remove markdown formatting
+                    clean_line = line[1:].strip()
+                    if clean_line.startswith('*') or clean_line.startswith('**'):
+                        clean_line = clean_line.lstrip('*').strip()
+                    report_lines.append(f"- {clean_line}")
+                elif line.startswith('  -'):
+                    # Sub-item (functionality examples)
+                    clean_line = line[2:].strip()
+                    if clean_line.startswith('*') or clean_line.startswith('**'):
+                        clean_line = clean_line.lstrip('*').strip()
+                    # Extract functionality name and example
+                    if ':' in clean_line:
+                        func_name, example = clean_line.split(':', 1)
+                        func_name = func_name.strip()
+                        example = example.strip()
+                        # Translate example if needed
+                        translated_example = self.translate_text(example, "English")
+                        if translated_example != example:
+                            report_lines.append(f"  - {func_name}: {example} ({translated_example})")
+                        else:
+                            report_lines.append(f"  - {func_name}: {example}")
+                    else:
+                        report_lines.append(f"  - {clean_line}")
+                elif line and not line.startswith('#'):
+                    report_lines.append(line)
+        else:
+            report_lines.append("No detailed negative reviews found.")
+        
+        report_lines.append("")
+        
+        # Add relevant quotes (with translation)
+        if sentiment_data.get('negative_quotes'):
+            report_lines.append("Relevant quotes:")
+            report_lines.append("")
+            for i, quote_data in enumerate(sentiment_data['negative_quotes'], 1):
+                quote_text = quote_data.get('text', '')
+                if quote_text:
+                    # Translate quote if not in English
+                    translated_quote = self.translate_text(quote_text, "English")
+                    if translated_quote != quote_text:
+                        report_lines.append(f"{i}. \"{quote_text}\" ({translated_quote})")
+                    else:
+                        report_lines.append(f"{i}. \"{quote_text}\"")
+        
+        report_lines.append("")
+        report_lines.append("📊 Changes from last week")
         report_lines.append("")
         
         previous_data = self.load_previous_report(app_name)
@@ -638,22 +750,21 @@ class ReportGenerator:
         
         if comparison['has_previous']:
             if comparison['changes']:
+                # Translate changes to English
                 for change in comparison['changes']:
-                    report_lines.append(f"- {change}")
+                    translated_change = self.translate_text(change, "English") if self.llm_analyzer else change
+                    report_lines.append(f"- {translated_change}")
             else:
-                report_lines.append("Значительных изменений не обнаружено.")
-            
-            if comparison.get('previous_date'):
-                prev_date = datetime.fromisoformat(comparison['previous_date'])
-                report_lines.append(f"")
-                report_lines.append(f"*Предыдущий отчет: {prev_date.strftime('%Y-%m-%d %H:%M:%S')}*")
+                report_lines.append("No significant changes detected.")
         else:
-            report_lines.append("Нет данных для сравнения (это первый отчет).")
-        
-        report_lines.append("")
-        report_lines.append("=" * 70)
+            report_lines.append("No data for comparison (this is the first report).")
         
         # Save current report to history
+        all_stats = {}
+        for store_type, reviews in reviews_by_store.items():
+            stats = self.calculate_statistics(reviews, store_type)
+            all_stats[store_type] = stats
+        
         self.save_report_to_history(app_name, {
             'app_name': app_name,
             'timestamp': datetime.now().isoformat(),
