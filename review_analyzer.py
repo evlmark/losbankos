@@ -13,7 +13,13 @@ from config import LLM_PROVIDER, LLM_MODEL, OPENAI_API_KEY, ANTHROPIC_API_KEY
 class ReviewAnalyzer:
     """Analyzer for reviews using LLM"""
     
-    def __init__(self):
+    def __init__(self, **kwargs):
+        """
+        Initialize ReviewAnalyzer
+        
+        Args:
+            **kwargs: Additional arguments (ignored, kept for compatibility)
+        """
         self.provider = LLM_PROVIDER
         self.model = LLM_MODEL
         
@@ -21,11 +27,13 @@ class ReviewAnalyzer:
             if not OPENAI_API_KEY:
                 raise ValueError("OPENAI_API_KEY is not set")
             from openai import OpenAI
+            # Explicitly pass only api_key to avoid any proxy or other parameter issues
             self.client = OpenAI(api_key=OPENAI_API_KEY)
         elif self.provider == "anthropic":
             if not ANTHROPIC_API_KEY:
                 raise ValueError("ANTHROPIC_API_KEY is not set")
             from anthropic import Anthropic
+            # Explicitly pass only api_key
             self.client = Anthropic(api_key=ANTHROPIC_API_KEY)
         else:
             raise ValueError(f"Unknown LLM provider: {self.provider}")
