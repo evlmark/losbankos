@@ -93,7 +93,7 @@ def run_analysis():
     for app_name, reviews_by_store in reviews_by_app.items():
         logger.info(f"Generating report for {app_name}...")
         report = report_generator.generate_report(app_name, reviews_by_store, use_llm=True, llm_analyzer=llm_analyzer)
-        all_reports.append(report)
+        all_reports.append((app_name, report))
         
         # Save individual report
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -104,8 +104,8 @@ def run_analysis():
         
         logger.info(f"Report saved to {report_file}")
     
-    # Combine all reports
-    summary_report = "\n\n".join(all_reports)
+    # Combine all reports (for file saving)
+    summary_report = "\n\n".join([report for _, report in all_reports])
     
     # Save combined report
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -131,19 +131,24 @@ def run_analysis():
             bot = TelegramBot()
             logger.info("TelegramBot initialized successfully")
             
-            # Send report to all subscribers
+            # Send individual reports (1 message = 1 company)
             logger.info("Creating event loop...")
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
             logger.info("Event loop created, sending reports...")
             
-            sent_count = loop.run_until_complete(bot.send_report_to_all_subscribers(summary_report))
+            total_sent = 0
+            for app_name, report in all_reports:
+                logger.info(f"Sending report for {app_name}...")
+                sent_count = loop.run_until_complete(bot.send_report_to_all_subscribers(report))
+                total_sent += sent_count
+                logger.info(f"Report for {app_name} sent to {sent_count} subscribers")
             
             logger.info("Closing event loop...")
             loop.close()
-            logger.info(f"📊 Report sending complete: {sent_count} Telegram subscribers received the report")
+            logger.info(f"📊 All reports sent: {total_sent} total messages sent to Telegram subscribers")
             
-            if sent_count == 0:
+            if total_sent == 0:
                 logger.error("❌ No reports were sent! Check logs above for details.")
     except Exception as e:
         logger.error(f"❌ Error sending reports to Telegram: {e}")
