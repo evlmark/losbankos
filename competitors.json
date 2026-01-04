@@ -1,14 +1,14 @@
 {
   "competitors": [
     {
-      "name": "BBVA GEMA",
+      "name": "BBVA",
       "store_type": "googleplay",
       "app_id": "com.bbva.GEMA",
       "country": "mx",
       "lang": "es"
     },
     {
-      "name": "BBVA GEMA",
+      "name": "BBVA",
       "store_type": "appstore",
       "app_id": "1459550683",
       "country": "mx"

@@ -447,12 +447,12 @@ class TelegramBot:
             
             # Send welcome message
             welcome_text = (
-                "👋 Привет! Я бот для анализа отзывов конкурентов.\n\n"
-                "Я буду автоматически отправлять вам новые отчеты каждую неделю.\n\n"
-                "Команды:\n"
-                "/start - подписаться на отчеты и получить последний отчет\n"
-                "/help - показать эту справку\n\n"
-                "Загружаю последний отчет..."
+                "👋 Hello! I'm a bot for analyzing competitor reviews.\n\n"
+                "I will automatically send you new reports every week.\n\n"
+                "Commands:\n"
+                "/start - subscribe to reports and get the latest report\n"
+                "/help - show this help\n\n"
+                "Loading the latest report..."
             )
             
             logger.info(f"Sending welcome message to {chat_id}...")
@@ -491,13 +491,13 @@ class TelegramBot:
                         # Update last_report_sent_at in Supabase
                         if self.supabase:
                             self.supabase.update_subscriber_last_report_sent(chat_id)
-                        await update.message.reply_text(f"✅ Отчеты отправлены! ({success_count} компаний)")
+                        await update.message.reply_text(f"✅ Reports sent! ({success_count} companies)")
                     else:
-                        await update.message.reply_text("❌ Ошибка при отправке отчетов. Попробуйте позже.")
+                        await update.message.reply_text("❌ Error sending reports. Please try again later.")
                 else:
                     logger.warning(f"No reports found in Supabase for {chat_id}")
                     await update.message.reply_text(
-                        "📭 Пока нет доступных отчетов. Первый отчет будет создан при следующем запуске анализа."
+                        "📭 No reports available yet. The first report will be created on the next analysis run."
                     )
             else:
                 # Fallback: use combined report from file
@@ -511,21 +511,21 @@ class TelegramBot:
                         
                         if result:
                             logger.info(f"✅ Report sent successfully to {chat_id}")
-                            await update.message.reply_text("✅ Отчет отправлен!")
+                            await update.message.reply_text("✅ Report sent!")
                         else:
                             logger.error(f"❌ Failed to send report to {chat_id} (send_message returned False)")
-                            await update.message.reply_text("❌ Ошибка при отправке отчета. Попробуйте позже.")
+                            await update.message.reply_text("❌ Error sending report. Please try again later.")
                         
                     except Exception as e:
                         logger.error(f"❌ Error sending report: {e}")
                         logger.error(f"❌ Error type: {type(e).__name__}")
                         import traceback
                         logger.error(f"❌ Traceback: {traceback.format_exc()}")
-                        await update.message.reply_text(f"❌ Ошибка при отправке отчета: {e}")
+                        await update.message.reply_text(f"❌ Error sending report: {e}")
                 else:
                     logger.warning(f"No reports found for {chat_id}")
                     await update.message.reply_text(
-                        "📭 Пока нет доступных отчетов. Первый отчет будет создан при следующем запуске анализа."
+                        "📭 No reports available yet. The first report will be created on the next analysis run."
                     )
         except Exception as e:
             logger.error(f"❌ Error in start_command: {e}")
@@ -533,19 +533,19 @@ class TelegramBot:
             import traceback
             logger.error(f"❌ Traceback: {traceback.format_exc()}")
             try:
-                await update.message.reply_text(f"❌ Произошла ошибка: {e}")
+                await update.message.reply_text(f"❌ An error occurred: {e}")
             except:
                 logger.error("❌ Could not send error message to user")
     
     async def help_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """Handle /help command"""
         help_text = (
-            "📚 Справка по боту\n\n"
-            "Команды:\n"
-            "/start - подписаться на отчеты и получить последний отчет\n"
-            "/help - показать эту справку\n"
-            "/subscribers - показать количество подписчиков (только для администратора)\n\n"
-            "Бот автоматически отправляет новые отчеты всем подписанным пользователям."
+            "📚 Bot Help\n\n"
+            "Commands:\n"
+            "/start - subscribe to reports and get the latest report\n"
+            "/help - show this help\n"
+            "/subscribers - show subscriber count (admin only)\n\n"
+            "The bot automatically sends new reports to all subscribed users."
         )
         await update.message.reply_text(help_text)
     
@@ -563,15 +563,15 @@ class TelegramBot:
         message_parts = []
         
         if count == 0:
-            message_parts.append("📭 Список подписчиков пуст.\n\nОтправьте /start чтобы подписаться на отчеты.")
+            message_parts.append("📭 Subscriber list is empty.\n\nSend /start to subscribe to reports.")
         else:
-            message_parts.append(f"👥 Количество подписчиков: {count}")
-            message_parts.append(f"Подписчики: {', '.join(map(str, subscribers[:10]))}")
+            message_parts.append(f"👥 Subscriber count: {count}")
+            message_parts.append(f"Subscribers: {', '.join(map(str, subscribers[:10]))}")
             if count > 10:
-                message_parts.append(f"и еще {count - 10}...")
+                message_parts.append(f"and {count - 10} more...")
         
         # Add sync status
-        message_parts.append("\n🔄 Статус синхронизации:")
+        message_parts.append("\n🔄 Sync status:")
         
         if sync_status.get('git_token_set', False):
             message_parts.append("✅ GIT_TOKEN настроен - автоматическая синхронизация включена")
