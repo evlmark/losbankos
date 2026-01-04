@@ -224,24 +224,24 @@ Translation:"""
         # Analyze common themes using keyword extraction and pattern matching
         themes = defaultdict(list)
         
-        # Define keyword patterns for different themes
+        # Define keyword patterns for different themes (in English)
         if sentiment == 'positive':
             theme_patterns = {
-                'Работает хорошо / функциональность': ['funciona', 'works', 'good', 'bueno', 'excelente', 'perfecto', 'recomiendo', 'recomend', 'útil', 'useful', 'easy', 'fácil', 'simple', 'rápido', 'quick', 'fast'],
-                'Лучше чем конкуренты': ['mejor', 'better', 'than', 'que', 'traditional', 'tradicional', 'banco', 'bank'],
-                'Удобство использования': ['fácil', 'easy', 'simple', 'intuitive', 'intuitivo', 'user friendly', 'práctico', 'practical'],
-                'Качество сервиса': ['servicio', 'service', 'support', 'soporte', 'atención', 'attention', 'ayuda', 'help'],
-                'Стабильность': ['estable', 'stable', 'confiable', 'reliable', 'seguro', 'secure', 'safe']
+                'Works well / functionality': ['funciona', 'works', 'good', 'bueno', 'excelente', 'perfecto', 'recomiendo', 'recomend', 'útil', 'useful', 'easy', 'fácil', 'simple', 'rápido', 'quick', 'fast'],
+                'Better than competitors': ['mejor', 'better', 'than', 'que', 'traditional', 'tradicional', 'banco', 'bank'],
+                'Ease of use': ['fácil', 'easy', 'simple', 'intuitive', 'intuitivo', 'user friendly', 'práctico', 'practical'],
+                'Service quality': ['servicio', 'service', 'support', 'soporte', 'atención', 'attention', 'ayuda', 'help'],
+                'Stability': ['estable', 'stable', 'confiable', 'reliable', 'seguro', 'secure', 'safe']
             }
         else:
             theme_patterns = {
-                'Проблемы с доступом / входом': ['acceso', 'access', 'login', 'entrar', 'iniciar sesión', 'blocked', 'bloqueado', 'frozen', 'congelado', 'cerrado', 'closed'],
-                'Проблемы с функциональностью': ['no funciona', "doesn't work", 'error', 'bug', 'falla', 'crash', 'no permite', "can't", 'no puedo', 'imposible', 'impossible'],
-                'Проблемы с поддержкой': ['soporte', 'support', 'atención', 'response', 'respuesta', 'contact', 'contacto', 'ayuda', 'help', 'no responde', "doesn't reply", 'sin respuesta'],
-                'Проблемы с обновлениями': ['actualización', 'update', 'después de', 'after', 'última', 'last', 'nueva versión', 'new version'],
-                'Ограниченный функционал': ['limitado', 'limited', 'falta', 'missing', 'no tiene', "doesn't have", 'no se puede', "can't", 'imposible', 'impossible'],
-                'Проблемы с безопасностью / блокировками': ['bloqueado', 'blocked', 'congelado', 'frozen', 'cerrado', 'closed', 'sin acceso', 'no access', 'ban', 'prohibido'],
-                'Плохое качество': ['mal', 'bad', 'terrible', 'horrible', 'pésimo', 'worst', 'peor', 'mala', 'poor']
+                'Access / login problems': ['acceso', 'access', 'login', 'entrar', 'iniciar sesión', 'blocked', 'bloqueado', 'frozen', 'congelado', 'cerrado', 'closed'],
+                'Functionality problems': ['no funciona', "doesn't work", 'error', 'bug', 'falla', 'crash', 'no permite', "can't", 'no puedo', 'imposible', 'impossible'],
+                'Support problems': ['soporte', 'support', 'atención', 'response', 'respuesta', 'contact', 'contacto', 'ayuda', 'help', 'no responde', "doesn't reply", 'sin respuesta'],
+                'Update problems': ['actualización', 'update', 'después de', 'after', 'última', 'last', 'nueva versión', 'new version'],
+                'Limited functionality': ['limitado', 'limited', 'falta', 'missing', 'no tiene', "doesn't have", 'no se puede', "can't", 'imposible', 'impossible'],
+                'Security / blocking problems': ['bloqueado', 'blocked', 'congelado', 'frozen', 'cerrado', 'closed', 'sin acceso', 'no access', 'ban', 'prohibido'],
+                'Poor quality': ['mal', 'bad', 'terrible', 'horrible', 'pésimo', 'worst', 'peor', 'mala', 'poor']
             }
         
         # Match reviews to themes
@@ -262,31 +262,37 @@ Translation:"""
                 summary_lines.append(f"- {theme}")
                 
                 # If this is about functionality, add specific examples
-                if 'функциональность' in theme.lower() or 'funcionalidad' in theme.lower() or 'funciona' in theme.lower():
+                if 'functionality' in theme.lower() or 'funcionalidad' in theme.lower() or 'funciona' in theme.lower() or 'works' in theme.lower():
                     if functionality_examples:
-                        # Add functionality examples
-                        func_names_ru = {
-                            'transferencia': 'переводы',
-                            'tarjeta': 'карты',
-                            'notificaciones': 'уведомления',
-                            'saldo': 'баланс',
-                            'cuenta': 'счета',
-                            'login': 'вход',
-                            'factura': 'счета/выписки',
-                            'contactos': 'контакты',
-                            'actualización': 'обновления',
-                            'cámara': 'камера/сканирование',
+                        # Add functionality examples (in English)
+                        func_names_en = {
+                            'transferencia': 'transfers',
+                            'tarjeta': 'cards',
+                            'notificaciones': 'notifications',
+                            'saldo': 'balance',
+                            'cuenta': 'accounts',
+                            'login': 'login',
+                            'factura': 'statements',
+                            'contactos': 'contacts',
+                            'actualización': 'updates',
+                            'cámara': 'camera/scanning',
                             'face id': 'Face ID',
-                            'token': 'токены',
-                            'servicios': 'оплата услуг',
-                            'movimientos': 'транзакции/движения'
+                            'token': 'tokens',
+                            'servicios': 'bill payment',
+                            'movimientos': 'transactions'
                         }
                         
                         mentioned_funcs = []
                         for func_key, examples in functionality_examples.items():
                             if examples:
-                                func_name = func_names_ru.get(func_key, func_key)
-                                mentioned_funcs.append(f"  - {func_name}: {examples[0][:100]}..." if len(examples[0]) > 100 else f"  - {func_name}: {examples[0]}")
+                                func_name = func_names_en.get(func_key, func_key)
+                                example_text = examples[0]
+                                # Translate example if needed
+                                translated_example = self.translate_text(example_text, "English") if self.llm_analyzer else example_text
+                                if len(example_text) > 100:
+                                    mentioned_funcs.append(f"  - {func_name}: {example_text[:100]}... ({translated_example[:100]}...)" if translated_example != example_text else f"  - {func_name}: {example_text[:100]}...")
+                                else:
+                                    mentioned_funcs.append(f"  - {func_name}: {example_text} ({translated_example})" if translated_example != example_text else f"  - {func_name}: {example_text}")
                         
                         if mentioned_funcs:
                             summary_lines.extend(mentioned_funcs[:3])  # Max 3 functionality examples
@@ -648,10 +654,10 @@ Be specific and highlight key problems. Group similar problems together. If a pr
                 line = line.strip()
                 if line.startswith('-'):
                     # Remove markdown formatting
-                    line = line[1:].strip()
-                    if line.startswith('*') or line.startswith('**'):
-                        line = line.lstrip('*').strip()
-                    report_lines.append(f"- {line}")
+                    clean_line = line[1:].strip()
+                    if clean_line.startswith('*') or clean_line.startswith('**'):
+                        clean_line = clean_line.lstrip('*').strip()
+                    report_lines.append(f"- {clean_line}")
                 elif line and not line.startswith('#'):
                     report_lines.append(line)
         else:
