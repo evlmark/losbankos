@@ -239,24 +239,30 @@ def run_analysis():
             bot = TelegramBot()
             logger.info("TelegramBot initialized successfully")
             
-            # Send combined report to all subscribers (one message with all companies)
+            # Send individual reports (1 message = 1 company)
             logger.info("Creating event loop...")
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
-            logger.info("Event loop created, sending combined report...")
+            logger.info("Event loop created, sending reports...")
             
-            logger.info(f"Sending combined report to all subscribers...")
-            sent_count = loop.run_until_complete(bot.send_report_to_all_subscribers(summary_report))
-            logger.info(f"Combined report sent to {sent_count} subscribers")
+            total_sent = 0
+            for app_name, report in all_reports:
+                logger.info(f"Sending report for {app_name}...")
+                sent_count = loop.run_until_complete(bot.send_report_to_all_subscribers(report))
+                total_sent += sent_count
+                logger.info(f"Report for {app_name} sent to {sent_count} subscribers")
             
             logger.info("Closing event loop...")
             loop.close()
-            logger.info(f"📊 Report sending complete: {sent_count} subscribers received the report")
+            logger.info(f"📊 All reports sent: {total_sent} total messages sent to Telegram subscribers")
             
-            if sent_count == 0:
+            if total_sent == 0:
                 logger.error("❌ No reports were sent! Check logs above for details.")
-            elif sent_count < len(bot.load_subscribers()):
-                logger.warning(f"⚠️  Only {sent_count}/{len(bot.load_subscribers())} subscribers received the report. Check logs for errors.")
+            else:
+                subscriber_count = len(bot.load_subscribers())
+                expected_sent = len(all_reports) * subscriber_count
+                if total_sent < expected_sent:
+                    logger.warning(f"⚠️  Only {total_sent}/{expected_sent} messages were sent. Check logs for errors.")
     except Exception as e:
         logger.error(f"❌ Error sending reports to Telegram: {e}")
         import traceback

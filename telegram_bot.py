@@ -42,14 +42,30 @@ class TelegramBot:
         
         # Initialize Supabase client if available
         self.supabase = None
+        logger.info(f"Checking Supabase availability...")
+        logger.info(f"  SUPABASE_AVAILABLE: {SUPABASE_AVAILABLE}")
+        logger.info(f"  SUPABASE_URL: {'✅ Set' if SUPABASE_URL else '❌ Not set'}")
+        logger.info(f"  SUPABASE_KEY: {'✅ Set' if SUPABASE_KEY else '❌ Not set'}")
+        
         if SUPABASE_AVAILABLE and SUPABASE_URL and SUPABASE_KEY:
             try:
+                logger.info("Initializing Supabase client...")
                 self.supabase = SupabaseClient()
                 logger.info("✅ Using Supabase for data storage")
             except Exception as e:
                 logger.warning(f"⚠️  Could not initialize Supabase: {e}")
+                logger.warning(f"⚠️  Error type: {type(e).__name__}")
+                import traceback
+                logger.warning(f"⚠️  Traceback: {traceback.format_exc()}")
                 logger.warning("⚠️  Falling back to file-based storage")
                 self.supabase = None
+        else:
+            if not SUPABASE_AVAILABLE:
+                logger.warning("⚠️  Supabase library not available")
+            if not SUPABASE_URL:
+                logger.warning("⚠️  SUPABASE_URL not set in environment variables")
+            if not SUPABASE_KEY:
+                logger.warning("⚠️  SUPABASE_KEY not set in environment variables")
         
         # Fallback: file-based storage (for backward compatibility)
         if not self.supabase:
@@ -87,16 +103,23 @@ class TelegramBot:
     def load_subscribers(self) -> List[int]:
         """Load list of subscriber chat IDs"""
         if self.supabase:
-            return self.supabase.get_subscribers()
+            logger.info("Loading subscribers from Supabase...")
+            subscribers = self.supabase.get_subscribers()
+            logger.info(f"✅ Loaded {len(subscribers)} subscribers from Supabase: {subscribers}")
+            return subscribers
         
         # Fallback to file-based storage
+        logger.info("Loading subscribers from file...")
         if not hasattr(self, 'subscribers_file') or not self.subscribers_file.exists():
+            logger.warning(f"⚠️  Subscribers file not found: {getattr(self, 'subscribers_file', 'N/A')}")
             return []
         
         try:
             with open(self.subscribers_file, 'r', encoding='utf-8') as f:
                 data = json.load(f)
-                return data.get('subscribers', [])
+                subscribers = data.get('subscribers', [])
+                logger.info(f"✅ Loaded {len(subscribers)} subscribers from file: {subscribers}")
+                return subscribers
         except Exception as e:
             logger.error(f"Error loading subscribers: {e}")
             return []
