@@ -240,8 +240,9 @@ def run_analysis():
             logger.info("TelegramBot initialized successfully")
             
             # Send individual reports (1 message = 1 company)
-            # Sort reports: BBVA first, then others alphabetically
-            all_reports_sorted = sorted(all_reports, key=lambda x: (x[0] != "BBVA", x[0]))
+            # Sort reports in fixed order: BBVA, Fondeadora, Konfio, Banamex, Finom, Revolut Business
+            order = ["BBVA", "Fondeadora", "Konfio", "Banamex", "Finom", "Revolut Business"]
+            all_reports_sorted = sorted(all_reports, key=lambda x: (order.index(x[0]) if x[0] in order else 999, x[0]))
             
             logger.info("Creating event loop...")
             loop = asyncio.new_event_loop()

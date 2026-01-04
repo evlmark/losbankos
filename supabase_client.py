@@ -244,11 +244,12 @@ class SupabaseClient:
                     if app_name not in reports_by_app:
                         reports_by_app[app_name] = report["report_content"]
                 
-                # Sort reports: BBVA first, then others alphabetically
+                # Sort reports in fixed order: BBVA, Fondeadora, Konfio, Banamex, Finom, Revolut Business
                 result = [{"app_name": app_name, "report_content": content} 
                          for app_name, content in reports_by_app.items()]
-                # Sort: BBVA first, then others alphabetically
-                result.sort(key=lambda x: (x["app_name"] != "BBVA", x["app_name"]))
+                # Define fixed order
+                order = ["BBVA", "Fondeadora", "Konfio", "Banamex", "Finom", "Revolut Business"]
+                result.sort(key=lambda x: (order.index(x["app_name"]) if x["app_name"] in order else 999, x["app_name"]))
                 logger.info(f"Found {len(result)} latest reports from Supabase")
                 return result
             
@@ -265,11 +266,12 @@ class SupabaseClient:
                     if app_name not in reports_by_app:
                         reports_by_app[app_name] = report["report_content"]
                 
-                # Sort reports: BBVA first, then others alphabetically
+                # Sort reports in fixed order: BBVA, Fondeadora, Konfio, Banamex, Finom, Revolut Business
                 result = [{"app_name": app_name, "report_content": content} 
                          for app_name, content in reports_by_app.items()]
-                # Sort: BBVA first, then others alphabetically
-                result.sort(key=lambda x: (x["app_name"] != "BBVA", x["app_name"]))
+                # Define fixed order
+                order = ["BBVA", "Fondeadora", "Konfio", "Banamex", "Finom", "Revolut Business"]
+                result.sort(key=lambda x: (order.index(x["app_name"]) if x["app_name"] in order else 999, x["app_name"]))
                 logger.info(f"Found {len(result)} reports from Supabase (no latest flag)")
                 return result
             
