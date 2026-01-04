@@ -4,7 +4,7 @@ requests==2.31.0
 schedule==1.2.0
 
 # LLM API clients
-openai==1.12.0
+openai>=1.55.3
 anthropic==0.18.1
 
 # Telegram
@@ -14,7 +14,6 @@ python-telegram-bot>=21.0
 slack-sdk==3.27.1
 
 # App Store reviews (using RSS feed, no library needed)
-# app-store-scraper==0.3.5  # Not used - using RSS feed instead
 
 # Google Play reviews
 google-play-scraper==1.2.2
@@ -25,3 +24,9 @@ python-dateutil==2.8.2
 # Logging
 loguru==0.7.2
 
+# For HTTP server (Render health check)
+uvicorn==0.27.0
+fastapi==0.109.0
+
+# Fix httpx version to avoid proxies error
+httpx<0.28.0,>=0.27.0
