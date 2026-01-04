@@ -37,9 +37,12 @@ class ReportGenerator:
         # Look for Spanish/French/German/Portuguese words that indicate non-English
         text_lower = text.lower()
         non_english_indicators = [
-            # Spanish
-            'que', 'para', 'con', 'por', 'muy', 'bien', 'mal', 'no', 'si', 'es', 'está', 'son', 'tiene',
+            # Spanish - common words
+            'que', 'para', 'con', 'por', 'muy', 'bien', 'mal', 'es', 'está', 'son', 'tiene',
             'puedo', 'puede', 'hacer', 'funciona', 'aplicación', 'cuenta', 'tarjeta', 'servicio',
+            'actualización', 'actualizar', 'pésima', 'pésimo', 'anda', 'deja', 'entrar',
+            'patada', 'disponible', 'debo', 'llevo', 'sirve', 'agarra', 'señal', 'bloquea',
+            'desbloquear', 'reconoce', 'código', 'autenticador', 'permite', 'crear',
             # French
             'que', 'pour', 'avec', 'très', 'bien', 'mal', 'est', 'sont', 'peut',
             # German
@@ -48,22 +51,25 @@ class ReportGenerator:
             'que', 'para', 'com', 'muito', 'bem', 'mal', 'não', 'é', 'está', 'são'
         ]
         
-        # Count non-English indicators
-        non_english_count = sum(1 for word in non_english_indicators if word in text_lower)
+        # Count non-English indicators (check whole words, not substrings)
+        words_in_text = text_lower.split()
+        non_english_count = sum(1 for word in words_in_text if word in non_english_indicators or any(indicator in word for indicator in non_english_indicators if len(indicator) > 3))
         
-        # If we find many non-English indicators, definitely translate
-        if non_english_count >= 2:
-            # Definitely not English, need to translate
+        # Check for English words
+        common_english_words = ['the', 'and', 'is', 'are', 'was', 'were', 'this', 'that', 'with', 'for', 'have', 'has', 'can', 'will', 'would', 'should', 'not', 'but', 'from', 'when']
+        english_word_count = sum(1 for word in words_in_text if word in common_english_words)
+        
+        # If we find non-English indicators, translate
+        if non_english_count > 0:
+            # Has non-English words, need to translate
             pass
+        elif english_word_count >= 3:
+            # Has many English words and no non-English indicators, likely English
+            return text
         else:
-            # Check for English words
-            common_english_words = ['the', 'and', 'is', 'are', 'was', 'were', 'this', 'that', 'with', 'for', 'have', 'has', 'can', 'will', 'would', 'should']
-            english_word_count = sum(1 for word in common_english_words if word in text_lower)
-            
-            # If many English words and no non-English indicators, likely English
-            if english_word_count >= 4 and non_english_count == 0:
-                # Likely already in English, return as is
-                return text
+            # Ambiguous - if text is short or has special characters, try to translate
+            # For safety, translate if we're not sure
+            pass
         
         if not self.llm_analyzer:
             logger.warning("LLM analyzer not available, cannot translate text")
@@ -703,14 +709,17 @@ Be specific and highlight key problems. Group similar problems together. If a pr
             for i, quote_data in enumerate(sentiment_data['positive_quotes'], 1):
                 quote_text = quote_data.get('text', '')
                 if quote_text:
-                    # Always try to translate quotes (will return original if already English)
+                    # Always try to translate quotes
+                    logger.info(f"Translating positive quote {i}: {quote_text[:50]}...")
                     translated_quote = self.translate_text(quote_text, "English")
                     # Always show translation in brackets if different from original
-                    if translated_quote != quote_text and translated_quote:
+                    if translated_quote and translated_quote != quote_text:
                         report_lines.append(f"{i}. \"{quote_text}\" ({translated_quote})")
+                        logger.info(f"Quote translated: {quote_text[:30]}... -> {translated_quote[:30]}...")
                     else:
                         # If translation failed or same, show original
                         report_lines.append(f"{i}. \"{quote_text}\"")
+                        logger.warning(f"Quote not translated (same or failed): {quote_text[:50]}...")
         
         report_lines.append("")
         report_lines.append("❌ What users write negatively")
@@ -780,14 +789,17 @@ Be specific and highlight key problems. Group similar problems together. If a pr
             for i, quote_data in enumerate(sentiment_data['negative_quotes'], 1):
                 quote_text = quote_data.get('text', '')
                 if quote_text:
-                    # Always try to translate quotes (will return original if already English)
+                    # Always try to translate quotes
+                    logger.info(f"Translating negative quote {i}: {quote_text[:50]}...")
                     translated_quote = self.translate_text(quote_text, "English")
                     # Always show translation in brackets if different from original
-                    if translated_quote != quote_text and translated_quote:
+                    if translated_quote and translated_quote != quote_text:
                         report_lines.append(f"{i}. \"{quote_text}\" ({translated_quote})")
+                        logger.info(f"Quote translated: {quote_text[:30]}... -> {translated_quote[:30]}...")
                     else:
                         # If translation failed or same, show original
                         report_lines.append(f"{i}. \"{quote_text}\"")
+                        logger.warning(f"Quote not translated (same or failed): {quote_text[:50]}...")
         
         report_lines.append("")
         report_lines.append("📊 Changes from last week")
