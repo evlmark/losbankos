@@ -242,7 +242,15 @@ def run_analysis():
             # Send individual reports (1 message = 1 company)
             # Sort reports in fixed order: BBVA, Fondeadora, Konfio, Banamex, Finom, Revolut Business
             order = ["BBVA", "Fondeadora", "Konfio", "Banamex", "Finom", "Revolut Business"]
-            all_reports_sorted = sorted(all_reports, key=lambda x: (order.index(x[0]) if x[0] in order else 999, x[0]))
+            def get_sort_key(item):
+                app_name = item[0]
+                # Handle "BBVA GEMA" as "BBVA" (first position)
+                if app_name == "BBVA GEMA":
+                    return (0, "BBVA")
+                if app_name in order:
+                    return (order.index(app_name), app_name)
+                return (999, app_name)
+            all_reports_sorted = sorted(all_reports, key=get_sort_key)
             
             logger.info("Creating event loop...")
             loop = asyncio.new_event_loop()

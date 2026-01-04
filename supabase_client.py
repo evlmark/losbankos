@@ -247,9 +247,17 @@ class SupabaseClient:
                 # Sort reports in fixed order: BBVA, Fondeadora, Konfio, Banamex, Finom, Revolut Business
                 result = [{"app_name": app_name, "report_content": content} 
                          for app_name, content in reports_by_app.items()]
-                # Define fixed order
+                # Define fixed order (handle both "BBVA" and "BBVA GEMA" as first)
                 order = ["BBVA", "Fondeadora", "Konfio", "Banamex", "Finom", "Revolut Business"]
-                result.sort(key=lambda x: (order.index(x["app_name"]) if x["app_name"] in order else 999, x["app_name"]))
+                def get_sort_key(item):
+                    app_name = item["app_name"]
+                    # Handle "BBVA GEMA" as "BBVA" (first position)
+                    if app_name == "BBVA GEMA":
+                        return (0, "BBVA")
+                    if app_name in order:
+                        return (order.index(app_name), app_name)
+                    return (999, app_name)
+                result.sort(key=get_sort_key)
                 logger.info(f"Found {len(result)} latest reports from Supabase")
                 return result
             
@@ -269,9 +277,17 @@ class SupabaseClient:
                 # Sort reports in fixed order: BBVA, Fondeadora, Konfio, Banamex, Finom, Revolut Business
                 result = [{"app_name": app_name, "report_content": content} 
                          for app_name, content in reports_by_app.items()]
-                # Define fixed order
+                # Define fixed order (handle both "BBVA" and "BBVA GEMA" as first)
                 order = ["BBVA", "Fondeadora", "Konfio", "Banamex", "Finom", "Revolut Business"]
-                result.sort(key=lambda x: (order.index(x["app_name"]) if x["app_name"] in order else 999, x["app_name"]))
+                def get_sort_key(item):
+                    app_name = item["app_name"]
+                    # Handle "BBVA GEMA" as "BBVA" (first position)
+                    if app_name == "BBVA GEMA":
+                        return (0, "BBVA")
+                    if app_name in order:
+                        return (order.index(app_name), app_name)
+                    return (999, app_name)
+                result.sort(key=get_sort_key)
                 logger.info(f"Found {len(result)} reports from Supabase (no latest flag)")
                 return result
             
