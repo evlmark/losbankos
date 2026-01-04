@@ -82,10 +82,29 @@ def run_analysis():
     # Initialize LLM analyzer if available
     llm_analyzer = None
     try:
+        # Check if API key is set
+        from config import OPENAI_API_KEY, LLM_PROVIDER, LLM_MODEL
+        if LLM_PROVIDER == "openai":
+            if not OPENAI_API_KEY:
+                logger.error("❌ OPENAI_API_KEY is not set in environment variables!")
+                logger.error("❌ Please set OPENAI_API_KEY in GitHub Secrets")
+                logger.error("❌ Translation and LLM summaries will not work without API key")
+            else:
+                logger.info(f"✅ OPENAI_API_KEY is set (length: {len(OPENAI_API_KEY)} chars)")
+                logger.info(f"✅ LLM_PROVIDER: {LLM_PROVIDER}, LLM_MODEL: {LLM_MODEL}")
+        
         llm_analyzer = ReviewAnalyzer()
-        logger.info("LLM analyzer initialized successfully")
+        logger.info("✅ LLM analyzer initialized successfully")
+    except ValueError as e:
+        logger.error(f"❌ Could not initialize LLM analyzer: {e}")
+        logger.error("❌ This usually means API key is missing or invalid")
+        logger.error("❌ Reports will be generated without LLM summaries and translations")
     except Exception as e:
-        logger.warning(f"Could not initialize LLM analyzer: {e}. Reports will be generated without LLM summaries.")
+        logger.error(f"❌ Could not initialize LLM analyzer: {e}")
+        logger.error(f"❌ Error type: {type(e).__name__}")
+        import traceback
+        logger.error(f"❌ Traceback: {traceback.format_exc()}")
+        logger.error("❌ Reports will be generated without LLM summaries and translations")
     
     report_generator = ReportGenerator(llm_analyzer=llm_analyzer)
     all_reports = []
