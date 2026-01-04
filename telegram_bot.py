@@ -18,7 +18,7 @@ except ImportError:
     CommandHandler = None
     ContextTypes = None
 
-from config import TELEGRAM_BOT_TOKEN, OUTPUT_DIR
+from config import TELEGRAM_BOT_TOKEN, OUTPUT_DIR, GIT_TOKEN
 
 
 class TelegramBot:
@@ -86,7 +86,7 @@ class TelegramBot:
     
     def _sync_subscribers_to_git(self, chat_id: int):
         """
-        Try to sync subscribers file to git repository
+        Try to sync subscribers file to git repository using GIT_TOKEN
         This ensures GitHub Actions has the latest subscriber list
         """
         try:
@@ -111,6 +111,11 @@ class TelegramBot:
                 logger.warning(f"Git status check failed: {git_status.stderr}")
                 return False
             
+            # Check if file has changes
+            if not git_status.stdout.strip():
+                logger.info("Subscriber file has no changes to commit")
+                return True
+            
             # Add file
             git_add = subprocess.run(
                 ['git', 'add', str(self.subscribers_file)],
@@ -123,6 +128,22 @@ class TelegramBot:
             if git_add.returncode != 0:
                 logger.warning(f"Git add failed: {git_add.stderr}")
                 return False
+            
+            # Configure git user (required for commit)
+            subprocess.run(
+                ['git', 'config', 'user.name', 'Telegram Bot'],
+                cwd=repo_root,
+                capture_output=True,
+                text=True,
+                timeout=5
+            )
+            subprocess.run(
+                ['git', 'config', 'user.email', 'bot@noreply.github.com'],
+                cwd=repo_root,
+                capture_output=True,
+                text=True,
+                timeout=5
+            )
             
             # Commit
             git_commit = subprocess.run(
@@ -137,33 +158,88 @@ class TelegramBot:
                 # Check if there are changes to commit
                 if "nothing to commit" in git_commit.stdout.lower():
                     logger.info("Subscriber file already committed")
-                    return True
-                logger.warning(f"Git commit failed: {git_commit.stderr}")
-                return False
+                else:
+                    logger.warning(f"Git commit failed: {git_commit.stderr}")
+                    return False
             
             logger.info(f"✅ Subscriber file committed to git successfully")
             
-            # Try to push (may fail if no credentials, but that's OK)
-            try:
-                git_push = subprocess.run(
-                    ['git', 'push', 'origin', 'main'],
-                    cwd=repo_root,
-                    capture_output=True,
-                    text=True,
-                    timeout=10
-                )
-                
-                if git_push.returncode == 0:
-                    logger.info(f"✅ Subscriber file pushed to GitHub successfully")
-                    return True
-                else:
-                    logger.warning(f"⚠️  Git push failed (this is OK on Render without credentials): {git_push.stderr}")
-                    logger.warning(f"⚠️  Please manually push telegram_subscribers.json to GitHub")
+            # Push to GitHub using GIT_TOKEN if available
+            if GIT_TOKEN:
+                try:
+                    # Get remote URL
+                    git_remote = subprocess.run(
+                        ['git', 'remote', 'get-url', 'origin'],
+                        cwd=repo_root,
+                        capture_output=True,
+                        text=True,
+                        timeout=5
+                    )
+                    
+                    if git_remote.returncode == 0:
+                        remote_url = git_remote.stdout.strip()
+                        # Convert HTTPS URL to include token
+                        if remote_url.startswith('https://github.com/'):
+                            # Extract repo path (e.g., evlmark/losbankos or evlmark/losbankos.git)
+                            repo_path = remote_url.replace('https://github.com/', '').rstrip('/')
+                            if repo_path.endswith('.git'):
+                                repo_path = repo_path[:-4]
+                            
+                            # Create URL with token
+                            token_url = f'https://{GIT_TOKEN}@github.com/{repo_path}.git'
+                            
+                            logger.info("Pushing to GitHub using GIT_TOKEN...")
+                            # Use token URL as remote for this push
+                            git_push = subprocess.run(
+                                ['git', 'push', token_url, 'main'],
+                                cwd=repo_root,
+                                capture_output=True,
+                                text=True,
+                                timeout=15
+                            )
+                            
+                            if git_push.returncode == 0:
+                                logger.info(f"✅ Subscriber file pushed to GitHub successfully")
+                                return True
+                            else:
+                                logger.error(f"❌ Git push failed: {git_push.stderr}")
+                                return False
+                        else:
+                            logger.warning(f"⚠️  Remote URL is not HTTPS, cannot use token: {remote_url}")
+                    else:
+                        logger.warning(f"⚠️  Could not get remote URL: {git_remote.stderr}")
+                except Exception as push_error:
+                    logger.error(f"❌ Error pushing to GitHub: {push_error}")
                     return False
-            except Exception as push_error:
-                logger.warning(f"⚠️  Could not push to GitHub (this is OK): {push_error}")
-                logger.warning(f"⚠️  Please manually push telegram_subscribers.json to GitHub")
-                return False
+            else:
+                # Try regular push (may work if credentials are already configured)
+                try:
+                    git_push = subprocess.run(
+                        ['git', 'push', 'origin', 'main'],
+                        cwd=repo_root,
+                        capture_output=True,
+                        text=True,
+                        timeout=10
+                    )
+                    
+                    if git_push.returncode == 0:
+                        logger.info(f"✅ Subscriber file pushed to GitHub successfully")
+                        return True
+                    else:
+                        logger.warning(f"⚠️  Git push failed (GIT_TOKEN not set): {git_push.stderr}")
+                        logger.warning(f"⚠️  Set GIT_TOKEN in Render Environment Variables to enable auto-sync")
+                        logger.warning(f"⚠️  Please manually push telegram_subscribers.json to GitHub")
+                        return False
+                except Exception as push_error:
+                    logger.warning(f"⚠️  Could not push to GitHub: {push_error}")
+                    logger.warning(f"⚠️  Set GIT_TOKEN in Render Environment Variables to enable auto-sync")
+                    return False
+                    
+        except Exception as e:
+            logger.error(f"Error syncing subscribers to git: {e}")
+            import traceback
+            logger.error(f"Traceback: {traceback.format_exc()}")
+            return False
                 
         except Exception as git_error:
             # Git operations are optional, don't fail if they don't work
@@ -277,6 +353,9 @@ class TelegramBot:
     async def subscribers_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """Handle /subscribers command - show subscribers and sync status"""
         subscribers = self.load_subscribers()
+        
+        # Check if user is admin (you can customize this logic)
+        # For now, allow anyone to see subscribers count
         count = len(subscribers)
         
         # Check sync status
@@ -294,6 +373,11 @@ class TelegramBot:
         
         # Add sync status
         message_parts.append("\n🔄 Статус синхронизации:")
+        
+        if status['git_token_set']:
+            message_parts.append("✅ GIT_TOKEN настроен - автоматическая синхронизация включена")
+        else:
+            message_parts.append("⚠️  GIT_TOKEN не настроен - добавьте его в Render Environment Variables")
         if sync_status['is_git_repo']:
             if sync_status['is_committed']:
                 message_parts.append("✅ Файл закоммичен в git")
