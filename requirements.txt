@@ -28,9 +28,10 @@ loguru==0.7.2
 uvicorn==0.27.0
 fastapi==0.109.0
 
-# Fix httpx version to avoid proxies error
-httpx<0.28.0,>=0.27.0
-
 # Supabase
 supabase==2.3.4
 psycopg2-binary==2.9.9
+
+# httpx version - compatible with supabase 2.3.4 (requires httpx<0.26)
+# Note: openai>=1.55.3 should work with httpx 0.24-0.25
+httpx>=0.24,<0.26
