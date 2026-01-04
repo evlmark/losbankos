@@ -50,6 +50,7 @@ DATA_DIR.mkdir(exist_ok=True)
 REVIEWS_DIR.mkdir(exist_ok=True)
 OUTPUT_DIR.mkdir(exist_ok=True)
 HISTORY_DIR.mkdir(exist_ok=True)
+REPORTS_DIR.mkdir(exist_ok=True)
 
 # Competitors configuration
 # This will be populated by the user
