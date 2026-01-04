@@ -18,7 +18,17 @@ except ImportError:
     CommandHandler = None
     ContextTypes = None
 
-from config import TELEGRAM_BOT_TOKEN, OUTPUT_DIR, REPORTS_DIR, GIT_TOKEN
+from config import TELEGRAM_BOT_TOKEN, OUTPUT_DIR, REPORTS_DIR, GIT_TOKEN, SUPABASE_URL, SUPABASE_KEY
+
+# Try to import Supabase client
+try:
+    from supabase_client import SupabaseClient
+    SUPABASE_AVAILABLE = True
+except (ImportError, ValueError) as e:
+    logger.warning(f"Supabase not available: {e}")
+    logger.warning("Falling back to file-based storage")
+    SUPABASE_AVAILABLE = False
+    SupabaseClient = None
 
 
 class TelegramBot:
@@ -30,12 +40,26 @@ class TelegramBot:
         if not self.bot_token:
             raise ValueError("TELEGRAM_BOT_TOKEN is not set")
         
-        # Save subscribers in repo root so it persists in GitHub Actions
-        self.subscribers_file = Path(__file__).parent / "telegram_subscribers.json"
-        self.subscribers_file.parent.mkdir(parents=True, exist_ok=True)
+        # Initialize Supabase client if available
+        self.supabase = None
+        if SUPABASE_AVAILABLE and SUPABASE_URL and SUPABASE_KEY:
+            try:
+                self.supabase = SupabaseClient()
+                logger.info("✅ Using Supabase for data storage")
+            except Exception as e:
+                logger.warning(f"⚠️  Could not initialize Supabase: {e}")
+                logger.warning("⚠️  Falling back to file-based storage")
+                self.supabase = None
         
-        # Try to update reports from repository (for Render deployment)
-        self._update_reports_from_repo()
+        # Fallback: file-based storage (for backward compatibility)
+        if not self.supabase:
+            self.subscribers_file = Path(__file__).parent / "telegram_subscribers.json"
+            self.subscribers_file.parent.mkdir(parents=True, exist_ok=True)
+            logger.info("📁 Using file-based storage (Supabase not available)")
+        
+        # Try to update reports from repository (for backward compatibility)
+        if not self.supabase:
+            self._update_reports_from_repo()
         
         # Initialize bot
         try:
@@ -62,7 +86,11 @@ class TelegramBot:
     
     def load_subscribers(self) -> List[int]:
         """Load list of subscriber chat IDs"""
-        if not self.subscribers_file.exists():
+        if self.supabase:
+            return self.supabase.get_subscribers()
+        
+        # Fallback to file-based storage
+        if not hasattr(self, 'subscribers_file') or not self.subscribers_file.exists():
             return []
         
         try:
@@ -75,6 +103,15 @@ class TelegramBot:
     
     def save_subscriber(self, chat_id: int):
         """Add a new subscriber"""
+        if self.supabase:
+            success = self.supabase.add_subscriber(chat_id)
+            if success:
+                logger.info(f"✅ Subscriber {chat_id} saved to Supabase")
+            else:
+                logger.error(f"❌ Failed to save subscriber {chat_id} to Supabase")
+            return
+        
+        # Fallback to file-based storage
         subscribers = self.load_subscribers()
         if chat_id not in subscribers:
             subscribers.append(chat_id)
@@ -252,48 +289,57 @@ class TelegramBot:
     
     def check_sync_status(self) -> dict:
         """
-        Check if subscribers file is synced with git
+        Check sync status - Supabase or file-based
         Returns status information
         """
         status = {
+            'using_supabase': bool(self.supabase),
+            'subscriber_count': 0,
+            'supabase_configured': bool(SUPABASE_URL and SUPABASE_KEY),
             'file_exists': False,
             'is_git_repo': False,
             'has_changes': False,
             'is_committed': False,
-            'subscriber_count': 0,
             'git_token_set': bool(GIT_TOKEN)
         }
         
-        try:
-            # Check if file exists
-            if self.subscribers_file.exists():
-                status['file_exists'] = True
-                subscribers = self.load_subscribers()
-                status['subscriber_count'] = len(subscribers)
-            
-            # Check if git repo
-            repo_root = Path(__file__).parent
-            if (repo_root / '.git').exists():
-                status['is_git_repo'] = True
+        if self.supabase:
+            # Using Supabase
+            try:
+                status['subscriber_count'] = self.supabase.get_subscriber_count()
+            except Exception as e:
+                logger.debug(f"Error getting subscriber count from Supabase: {e}")
+        else:
+            # File-based storage
+            try:
+                if hasattr(self, 'subscribers_file') and self.subscribers_file.exists():
+                    status['file_exists'] = True
+                    subscribers = self.load_subscribers()
+                    status['subscriber_count'] = len(subscribers)
                 
-                # Check git status
-                import subprocess
-                git_status = subprocess.run(
-                    ['git', 'status', '--porcelain', str(self.subscribers_file)],
-                    cwd=repo_root,
-                    capture_output=True,
-                    text=True,
-                    timeout=5
-                )
-                
-                if git_status.returncode == 0:
-                    if git_status.stdout.strip():
-                        status['has_changes'] = True
-                    else:
-                        status['is_committed'] = True
+                # Check if git repo
+                repo_root = Path(__file__).parent
+                if (repo_root / '.git').exists():
+                    status['is_git_repo'] = True
+                    
+                    # Check git status
+                    import subprocess
+                    if hasattr(self, 'subscribers_file'):
+                        git_status = subprocess.run(
+                            ['git', 'status', '--porcelain', str(self.subscribers_file)],
+                            cwd=repo_root,
+                            capture_output=True,
+                            text=True,
+                            timeout=5
+                        )
                         
-        except Exception as e:
-            logger.debug(f"Error checking sync status: {e}")
+                        if git_status.returncode == 0:
+                            if git_status.stdout.strip():
+                                status['has_changes'] = True
+                            else:
+                                status['is_committed'] = True
+            except Exception as e:
+                logger.debug(f"Error checking sync status: {e}")
         
         return status
     
@@ -326,22 +372,41 @@ class TelegramBot:
             logger.debug(f"Could not update reports from repository: {e}")
             # This is OK - reports might already be up to date or git might not be available
     
-    def get_latest_report(self) -> Optional[Path]:
+    def get_latest_report(self) -> Optional[str]:
         """
-        Get the latest combined report from repository reports directory.
-        First tries to find latest_report.md, then searches for most recent report_all_*.md
+        Get the latest combined report content.
+        Uses Supabase if available, otherwise falls back to file-based storage.
         """
-        # First, try to get latest_report.md (always points to most recent)
+        # Try Supabase first
+        if self.supabase:
+            report_content = self.supabase.get_latest_combined_report()
+            if report_content:
+                logger.info("✅ Retrieved latest report from Supabase")
+                return report_content
+            logger.warning("No reports found in Supabase")
+            return None
+        
+        # Fallback to file-based storage
         latest_file = REPORTS_DIR / "latest_report.md"
         if latest_file.exists():
             logger.info(f"Found latest report: {latest_file}")
-            return latest_file
+            try:
+                with open(latest_file, 'r', encoding='utf-8') as f:
+                    return f.read()
+            except Exception as e:
+                logger.error(f"Error reading report file: {e}")
+                return None
         
         # Fallback: search for most recent report_all_*.md
         report_files = sorted(REPORTS_DIR.glob("report_all_*.md"), key=os.path.getmtime, reverse=True)
         if report_files:
             logger.info(f"Found report file: {report_files[0]}")
-            return report_files[0]
+            try:
+                with open(report_files[0], 'r', encoding='utf-8') as f:
+                    return f.read()
+            except Exception as e:
+                logger.error(f"Error reading report file: {e}")
+                return None
         
         logger.warning(f"No reports found in {REPORTS_DIR}")
         return None
@@ -371,37 +436,32 @@ class TelegramBot:
             await update.message.reply_text(welcome_text)
             logger.info(f"Welcome message sent to {chat_id}")
             
-            # Try to update reports from repository before reading
-            logger.info("Updating reports from repository...")
-            self._update_reports_from_repo()
+            # Try to update reports from repository before reading (only for file-based fallback)
+            if not self.supabase:
+                logger.info("Updating reports from repository...")
+                self._update_reports_from_repo()
             
             # Send latest report
             logger.info("Looking for latest report...")
-            latest_report = self.get_latest_report()
+            report_content = self.get_latest_report()
             
-            if latest_report:
-                logger.info(f"Found report: {latest_report}")
+            if report_content:
+                logger.info(f"Found report (length: {len(report_content)} characters)")
                 try:
-                    logger.info(f"Reading report file: {latest_report}")
-                    with open(latest_report, 'r', encoding='utf-8') as f:
-                        report_content = f.read()
-                    
-                    logger.info(f"Report content length: {len(report_content)} characters")
-                    
                     # Send report (split if too long)
                     logger.info(f"Sending report to {chat_id}...")
                     result = await self.send_message(chat_id, report_content)
                     
                     if result:
                         logger.info(f"✅ Report sent successfully to {chat_id}")
+                        # Update last_report_sent_at in Supabase
+                        if self.supabase:
+                            self.supabase.update_subscriber_last_report_sent(chat_id)
                         await update.message.reply_text("✅ Отчет отправлен!")
                     else:
                         logger.error(f"❌ Failed to send report to {chat_id} (send_message returned False)")
                         await update.message.reply_text("❌ Ошибка при отправке отчета. Попробуйте позже.")
                     
-                except FileNotFoundError as e:
-                    logger.error(f"❌ Report file not found: {e}")
-                    await update.message.reply_text(f"❌ Файл отчета не найден: {e}")
                 except Exception as e:
                     logger.error(f"❌ Error sending report: {e}")
                     logger.error(f"❌ Error type: {type(e).__name__}")
@@ -593,6 +653,9 @@ class TelegramBot:
                 if result:
                     success_count += 1
                     logger.info(f"✅ Successfully sent report to subscriber {chat_id}")
+                    # Update last_report_sent_at in Supabase
+                    if self.supabase:
+                        self.supabase.update_subscriber_last_report_sent(chat_id)
                 else:
                     logger.error(f"❌ Failed to send report to subscriber {chat_id} (send_message returned False)")
             except Exception as e:

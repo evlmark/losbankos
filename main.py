@@ -6,7 +6,7 @@ from pathlib import Path
 from datetime import datetime
 from loguru import logger
 
-from config import COMPETITORS, OUTPUT_DIR, REPORTS_DIR, REVIEWS_PER_APP, TELEGRAM_BOT_TOKEN
+from config import COMPETITORS, OUTPUT_DIR, REPORTS_DIR, REVIEWS_PER_APP, TELEGRAM_BOT_TOKEN, SUPABASE_URL, SUPABASE_KEY
 from store_scrapers import scrape_all_competitors
 from report_generator import ReportGenerator
 from review_analyzer import ReviewAnalyzer
@@ -109,24 +109,84 @@ def run_analysis():
     report_generator = ReportGenerator(llm_analyzer=llm_analyzer)
     all_reports = []
     
+    # Initialize Supabase client if available
+    supabase_client = None
+    if SUPABASE_URL and SUPABASE_KEY:
+        try:
+            from supabase_client import SupabaseClient
+            supabase_client = SupabaseClient()
+            logger.info("✅ Supabase client initialized for saving reports")
+        except Exception as e:
+            logger.warning(f"⚠️  Could not initialize Supabase client: {e}")
+            logger.warning("⚠️  Reports will be saved to files only")
+    
+    # Generate reports and collect statistics
+    app_statistics = {}
     for app_name, reviews_by_store in reviews_by_app.items():
         logger.info(f"Generating report for {app_name}...")
         report = report_generator.generate_report(app_name, reviews_by_store, use_llm=True, llm_analyzer=llm_analyzer)
         all_reports.append((app_name, report))
         
-        # Save individual report
+        # Calculate statistics for this app
+        all_app_reviews = []
+        for reviews in reviews_by_store.values():
+            all_app_reviews.extend(reviews)
+        
+        app_stats = report_generator.calculate_statistics(all_app_reviews, "all")
+        app_statistics[app_name] = {
+            'total_reviews': len(all_app_reviews),
+            'positive_count': app_stats.get('positive_count', 0),
+            'neutral_count': app_stats.get('neutral_count', 0),
+            'negative_count': app_stats.get('negative_count', 0)
+        }
+        
+        # Save individual report to Supabase
+        if supabase_client:
+            try:
+                report_id = supabase_client.save_report(
+                    app_name=app_name,
+                    report_content=report,
+                    total_reviews=app_statistics[app_name]['total_reviews'],
+                    positive_count=app_statistics[app_name]['positive_count'],
+                    neutral_count=app_statistics[app_name]['neutral_count'],
+                    negative_count=app_statistics[app_name]['negative_count'],
+                    is_latest=True
+                )
+                if report_id:
+                    logger.info(f"✅ Report for {app_name} saved to Supabase (ID: {report_id})")
+            except Exception as e:
+                logger.error(f"❌ Error saving report for {app_name} to Supabase: {e}")
+        
+        # Also save to file (for backward compatibility and artifacts)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         safe_app_name = app_name.replace(' ', '_').replace('/', '_')
         report_file = OUTPUT_DIR / f"report_{safe_app_name}_{timestamp}.md"
         with open(report_file, 'w', encoding='utf-8') as f:
             f.write(report)
-        
         logger.info(f"Report saved to {report_file}")
     
-    # Combine all reports (for file saving)
+    # Combine all reports
     summary_report = "\n\n".join([report for _, report in all_reports])
     
-    # Save combined report to both OUTPUT_DIR (for GitHub Actions artifacts) and REPORTS_DIR (for bot access)
+    # Calculate total statistics for combined report
+    total_reviews_all = sum(stats['total_reviews'] for stats in app_statistics.values())
+    total_apps = len(app_statistics)
+    
+    # Save combined report to Supabase
+    if supabase_client:
+        try:
+            report_id = supabase_client.save_combined_report(
+                report_content=summary_report,
+                total_apps=total_apps,
+                total_reviews=total_reviews_all,
+                is_latest=True
+            )
+            if report_id:
+                logger.info(f"✅ Combined report saved to Supabase (ID: {report_id})")
+        except Exception as e:
+            logger.error(f"❌ Error saving combined report to Supabase: {e}")
+    
+    # Also save to files (for backward compatibility and artifacts)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     
     # Save to OUTPUT_DIR (for artifacts)
@@ -135,7 +195,7 @@ def run_analysis():
         f.write(summary_report)
     logger.info(f"Combined report saved to {combined_report_file}")
     
-    # Save to REPORTS_DIR (for bot access from repository)
+    # Save to REPORTS_DIR (for backward compatibility)
     repo_report_file = REPORTS_DIR / f"report_all_{timestamp}.md"
     with open(repo_report_file, 'w', encoding='utf-8') as f:
         f.write(summary_report)

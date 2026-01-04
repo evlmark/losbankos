@@ -30,3 +30,7 @@ fastapi==0.109.0
 
 # Fix httpx version to avoid proxies error
 httpx<0.28.0,>=0.27.0
+
+# Supabase
+supabase==2.3.4
+psycopg2-binary==2.9.9

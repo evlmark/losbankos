@@ -32,8 +32,13 @@ SCHEDULE_TIME = os.getenv("SCHEDULE_TIME", "09:00")
 # Reviews Configuration
 REVIEWS_PER_APP = int(os.getenv("REVIEWS_PER_APP", "100"))
 
-# Git Configuration (for syncing subscribers)
+# Git Configuration (for syncing subscribers) - DEPRECATED, using Supabase now
 GIT_TOKEN = os.getenv("GIT_TOKEN")  # GitHub Personal Access Token for pushing changes
+
+# Supabase Configuration
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")  # anon public key
+SUPABASE_DB_URL = os.getenv("SUPABASE_DB_URL")  # Optional: direct PostgreSQL connection
 
 # Directories
 BASE_DIR = Path(__file__).parent
