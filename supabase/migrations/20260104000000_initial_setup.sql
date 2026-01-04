@@ -93,4 +93,8 @@ CREATE POLICY "Allow read on combined_reports" ON combined_reports
 DROP POLICY IF EXISTS "Allow insert on combined_reports" ON combined_reports;
 CREATE POLICY "Allow insert on combined_reports" ON combined_reports
     FOR INSERT WITH CHECK (true);
+    
+DROP POLICY IF EXISTS "Allow update on combined_reports" ON combined_reports;
+CREATE POLICY "Allow update on combined_reports" ON combined_reports
+    FOR UPDATE USING (true) WITH CHECK (true);
 

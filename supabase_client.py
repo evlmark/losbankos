@@ -140,8 +140,10 @@ class SupabaseClient:
         try:
             # If this is latest, mark all other combined reports as not latest
             if is_latest:
+                # Update only records where is_latest = True (Supabase requires WHERE clause)
                 self.client.from_("combined_reports")\
                     .update({"is_latest": False})\
+                    .eq("is_latest", True)\
                     .execute()
             
             response = self.client.from_("combined_reports")\
