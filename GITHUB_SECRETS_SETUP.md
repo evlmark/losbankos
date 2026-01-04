@@ -119,6 +119,8 @@
 
 1. ✅ `TELEGRAM_BOT_TOKEN` - для отправки отчетов
 2. ✅ `OPENAI_API_KEY` - для AI-суммаризации отзывов
+3. ✅ `SUPABASE_URL` - URL вашего Supabase проекта
+4. ✅ `SUPABASE_KEY` - anon public key для Supabase
 
 Остальные настройки будут использованы по умолчанию.
 
@@ -130,10 +132,12 @@
 
 1. ✅ `TELEGRAM_BOT_TOKEN`
 2. ✅ `OPENAI_API_KEY`
-3. ✅ `LLM_PROVIDER` = `openai`
-4. ✅ `LLM_MODEL` = `gpt-4o-mini`
-5. ✅ `NOTIFICATION_METHOD` = `telegram`
-6. ✅ `REVIEWS_PER_APP` = `100`
+3. ✅ `SUPABASE_URL`
+4. ✅ `SUPABASE_KEY`
+5. ✅ `LLM_PROVIDER` = `openai`
+6. ✅ `LLM_MODEL` = `gpt-4o-mini`
+7. ✅ `NOTIFICATION_METHOD` = `telegram`
+8. ✅ `REVIEWS_PER_APP` = `100`
 
 ---
 

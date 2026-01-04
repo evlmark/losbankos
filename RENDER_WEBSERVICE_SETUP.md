@@ -53,15 +53,19 @@ python run_bot.py
 - **Key:** `LLM_MODEL`
   **Value:** `gpt-4o-mini`
 
-- **Key:** `GIT_TOKEN` (ОПЦИОНАЛЬНО, но рекомендуется для автоматической синхронизации)
+- **Key:** `SUPABASE_URL` (ОБЯЗАТЕЛЬНО для работы с базой данных)
+  **Value:** `https://vqqdmdffssmobsofbnqf.supabase.co`
+  **Описание:** URL вашего Supabase проекта
+
+- **Key:** `SUPABASE_KEY` (ОБЯЗАТЕЛЬНО для работы с базой данных)
+  **Value:** `ваш_anon_public_key`
+  **Описание:** Anon public key для доступа к Supabase API
+  **Где найти:** Supabase Dashboard → Settings → API → Project API keys → anon public
+
+- **Key:** `GIT_TOKEN` (ОПЦИОНАЛЬНО, только если не используете Supabase)
   **Value:** `ваш_github_personal_access_token`
-  **Описание:** GitHub Personal Access Token для автоматической синхронизации подписчиков в репозиторий
-  **Как создать:**
-  1. Перейдите: https://github.com/settings/tokens
-  2. Нажмите "Generate new token (classic)"
-  3. Выберите права: `repo` (полный доступ к репозиториям)
-  4. Скопируйте токен и вставьте в Render
-  **Важно:** Без этого токена подписчики не будут автоматически синхронизироваться с GitHub
+  **Описание:** GitHub Personal Access Token (только для fallback на файловое хранилище)
+  **Примечание:** Если используете Supabase, этот токен не нужен
 
 ### 4. План
 
