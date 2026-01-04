@@ -143,6 +143,7 @@ def run_analysis():
         # Save individual report to Supabase
         if supabase_client:
             try:
+                logger.info(f"Saving report for {app_name} to Supabase...")
                 report_id = supabase_client.save_report(
                     app_name=app_name,
                     report_content=report,
@@ -154,8 +155,13 @@ def run_analysis():
                 )
                 if report_id:
                     logger.info(f"✅ Report for {app_name} saved to Supabase (ID: {report_id})")
+                else:
+                    logger.error(f"❌ Failed to save report for {app_name} to Supabase: save_report returned None")
             except Exception as e:
                 logger.error(f"❌ Error saving report for {app_name} to Supabase: {e}")
+                logger.error(f"❌ Error type: {type(e).__name__}")
+                import traceback
+                logger.error(f"❌ Traceback: {traceback.format_exc()}")
         
         # Also save to file (for backward compatibility and artifacts)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -175,6 +181,7 @@ def run_analysis():
     # Save combined report to Supabase
     if supabase_client:
         try:
+            logger.info("Saving combined report to Supabase...")
             report_id = supabase_client.save_combined_report(
                 report_content=summary_report,
                 total_apps=total_apps,
@@ -183,8 +190,17 @@ def run_analysis():
             )
             if report_id:
                 logger.info(f"✅ Combined report saved to Supabase (ID: {report_id})")
+            else:
+                logger.error("❌ Failed to save combined report to Supabase: save_combined_report returned None")
+                import traceback
+                logger.error(f"❌ Traceback: {traceback.format_exc()}")
         except Exception as e:
             logger.error(f"❌ Error saving combined report to Supabase: {e}")
+            logger.error(f"❌ Error type: {type(e).__name__}")
+            import traceback
+            logger.error(f"❌ Traceback: {traceback.format_exc()}")
+    else:
+        logger.warning("⚠️  Supabase client not available, combined report not saved to Supabase")
     
     # Also save to files (for backward compatibility and artifacts)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -223,25 +239,24 @@ def run_analysis():
             bot = TelegramBot()
             logger.info("TelegramBot initialized successfully")
             
-            # Send individual reports (1 message = 1 company)
+            # Send combined report to all subscribers (one message with all companies)
             logger.info("Creating event loop...")
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
-            logger.info("Event loop created, sending reports...")
+            logger.info("Event loop created, sending combined report...")
             
-            total_sent = 0
-            for app_name, report in all_reports:
-                logger.info(f"Sending report for {app_name}...")
-                sent_count = loop.run_until_complete(bot.send_report_to_all_subscribers(report))
-                total_sent += sent_count
-                logger.info(f"Report for {app_name} sent to {sent_count} subscribers")
+            logger.info(f"Sending combined report to all subscribers...")
+            sent_count = loop.run_until_complete(bot.send_report_to_all_subscribers(summary_report))
+            logger.info(f"Combined report sent to {sent_count} subscribers")
             
             logger.info("Closing event loop...")
             loop.close()
-            logger.info(f"📊 All reports sent: {total_sent} total messages sent to Telegram subscribers")
+            logger.info(f"📊 Report sending complete: {sent_count} subscribers received the report")
             
-            if total_sent == 0:
+            if sent_count == 0:
                 logger.error("❌ No reports were sent! Check logs above for details.")
+            elif sent_count < len(bot.load_subscribers()):
+                logger.warning(f"⚠️  Only {sent_count}/{len(bot.load_subscribers())} subscribers received the report. Check logs for errors.")
     except Exception as e:
         logger.error(f"❌ Error sending reports to Telegram: {e}")
         import traceback

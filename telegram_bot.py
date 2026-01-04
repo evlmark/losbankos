@@ -646,6 +646,7 @@ class TelegramBot:
         logger.info(f"📊 Report length: {len(report_content)} characters")
         
         success_count = 0
+        failed_chat_ids = []
         for chat_id in subscribers:
             try:
                 logger.info(f"📨 Attempting to send report to subscriber {chat_id}...")
@@ -655,10 +656,15 @@ class TelegramBot:
                     logger.info(f"✅ Successfully sent report to subscriber {chat_id}")
                     # Update last_report_sent_at in Supabase
                     if self.supabase:
-                        self.supabase.update_subscriber_last_report_sent(chat_id)
+                        try:
+                            self.supabase.update_subscriber_last_report_sent(chat_id)
+                        except Exception as e:
+                            logger.warning(f"⚠️  Failed to update last_report_sent_at for {chat_id}: {e}")
                 else:
+                    failed_chat_ids.append(chat_id)
                     logger.error(f"❌ Failed to send report to subscriber {chat_id} (send_message returned False)")
             except Exception as e:
+                failed_chat_ids.append(chat_id)
                 logger.error(f"❌ Error sending to subscriber {chat_id}: {e}")
                 logger.error(f"❌ Error type: {type(e).__name__}")
                 import traceback
@@ -668,6 +674,8 @@ class TelegramBot:
         if success_count == 0:
             logger.error("❌ No reports were sent successfully!")
             logger.error("❌ Check logs above for error details")
+        elif failed_chat_ids:
+            logger.warning(f"⚠️  Failed to send to {len(failed_chat_ids)} subscribers: {failed_chat_ids}")
         
         return success_count
     
