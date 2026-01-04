@@ -42,6 +42,9 @@ REVIEWS_DIR = DATA_DIR / "reviews"
 OUTPUT_DIR = DATA_DIR / "outputs"
 HISTORY_DIR = OUTPUT_DIR / "history"
 
+# Reports directory (saved in repository for bot access)
+REPORTS_DIR = BASE_DIR / "reports"
+
 # Create directories if they don't exist
 DATA_DIR.mkdir(exist_ok=True)
 REVIEWS_DIR.mkdir(exist_ok=True)

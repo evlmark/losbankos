@@ -6,7 +6,7 @@ from pathlib import Path
 from datetime import datetime
 from loguru import logger
 
-from config import COMPETITORS, OUTPUT_DIR, REVIEWS_PER_APP, TELEGRAM_BOT_TOKEN
+from config import COMPETITORS, OUTPUT_DIR, REPORTS_DIR, REVIEWS_PER_APP, TELEGRAM_BOT_TOKEN
 from store_scrapers import scrape_all_competitors
 from report_generator import ReportGenerator
 from review_analyzer import ReviewAnalyzer
@@ -126,13 +126,26 @@ def run_analysis():
     # Combine all reports (for file saving)
     summary_report = "\n\n".join([report for _, report in all_reports])
     
-    # Save combined report
+    # Save combined report to both OUTPUT_DIR (for GitHub Actions artifacts) and REPORTS_DIR (for bot access)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    
+    # Save to OUTPUT_DIR (for artifacts)
     combined_report_file = OUTPUT_DIR / f"report_all_{timestamp}.md"
     with open(combined_report_file, 'w', encoding='utf-8') as f:
         f.write(summary_report)
-    
     logger.info(f"Combined report saved to {combined_report_file}")
+    
+    # Save to REPORTS_DIR (for bot access from repository)
+    repo_report_file = REPORTS_DIR / f"report_all_{timestamp}.md"
+    with open(repo_report_file, 'w', encoding='utf-8') as f:
+        f.write(summary_report)
+    logger.info(f"Report saved to repository: {repo_report_file}")
+    
+    # Also save latest report (for easy access)
+    latest_report_file = REPORTS_DIR / "latest_report.md"
+    with open(latest_report_file, 'w', encoding='utf-8') as f:
+        f.write(summary_report)
+    logger.info(f"Latest report saved to: {latest_report_file}")
     
     # Step 4: Send notification via Telegram bot
     logger.info("Step 4: Sending reports to Telegram subscribers...")

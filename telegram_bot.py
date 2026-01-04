@@ -18,7 +18,7 @@ except ImportError:
     CommandHandler = None
     ContextTypes = None
 
-from config import TELEGRAM_BOT_TOKEN, OUTPUT_DIR, GIT_TOKEN
+from config import TELEGRAM_BOT_TOKEN, OUTPUT_DIR, REPORTS_DIR, GIT_TOKEN
 
 
 class TelegramBot:
@@ -295,10 +295,23 @@ class TelegramBot:
         return status
     
     def get_latest_report(self) -> Optional[Path]:
-        """Get the latest combined report"""
-        report_files = sorted(OUTPUT_DIR.glob("report_all_*.md"), key=os.path.getmtime, reverse=True)
+        """
+        Get the latest combined report from repository reports directory.
+        First tries to find latest_report.md, then searches for most recent report_all_*.md
+        """
+        # First, try to get latest_report.md (always points to most recent)
+        latest_file = REPORTS_DIR / "latest_report.md"
+        if latest_file.exists():
+            logger.info(f"Found latest report: {latest_file}")
+            return latest_file
+        
+        # Fallback: search for most recent report_all_*.md
+        report_files = sorted(REPORTS_DIR.glob("report_all_*.md"), key=os.path.getmtime, reverse=True)
         if report_files:
+            logger.info(f"Found report file: {report_files[0]}")
             return report_files[0]
+        
+        logger.warning(f"No reports found in {REPORTS_DIR}")
         return None
     
     async def start_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
