@@ -226,6 +226,53 @@ class SupabaseClient:
             logger.error(f"Error getting latest report for {app_name} from Supabase: {e}")
             return None
     
+    def get_all_latest_reports(self) -> List[Dict[str, str]]:
+        """Get all latest reports (one per app) as list of {app_name, report_content}"""
+        try:
+            # Get all latest reports (one per app)
+            response = self.client.from_("reports")\
+                .select("app_name, report_content")\
+                .eq("is_latest", True)\
+                .order("report_date", desc=True)\
+                .execute()
+            
+            if response.data:
+                # Group by app_name and get the most recent for each
+                reports_by_app = {}
+                for report in response.data:
+                    app_name = report["app_name"]
+                    if app_name not in reports_by_app:
+                        reports_by_app[app_name] = report["report_content"]
+                
+                result = [{"app_name": app_name, "report_content": content} 
+                         for app_name, content in reports_by_app.items()]
+                logger.info(f"Found {len(result)} latest reports from Supabase")
+                return result
+            
+            # Fallback: get most recent report for each app
+            all_reports = self.client.from_("reports")\
+                .select("app_name, report_content, report_date")\
+                .order("report_date", desc=True)\
+                .execute()
+            
+            if all_reports.data:
+                reports_by_app = {}
+                for report in all_reports.data:
+                    app_name = report["app_name"]
+                    if app_name not in reports_by_app:
+                        reports_by_app[app_name] = report["report_content"]
+                
+                result = [{"app_name": app_name, "report_content": content} 
+                         for app_name, content in reports_by_app.items()]
+                logger.info(f"Found {len(result)} reports from Supabase (no latest flag)")
+                return result
+            
+            logger.warning("No reports found in Supabase")
+            return []
+        except Exception as e:
+            logger.error(f"Error getting all latest reports from Supabase: {e}")
+            return []
+    
     def update_subscriber_last_report_sent(self, chat_id: int):
         """Update last_report_sent_at timestamp for subscriber"""
         try:

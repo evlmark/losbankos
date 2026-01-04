@@ -464,38 +464,69 @@ class TelegramBot:
                 logger.info("Updating reports from repository...")
                 self._update_reports_from_repo()
             
-            # Send latest report
-            logger.info("Looking for latest report...")
-            report_content = self.get_latest_report()
+            # Send individual reports (1 message = 1 company)
+            logger.info("Looking for latest reports...")
             
-            if report_content:
-                logger.info(f"Found report (length: {len(report_content)} characters)")
-                try:
-                    # Send report (split if too long)
-                    logger.info(f"Sending report to {chat_id}...")
-                    result = await self.send_message(chat_id, report_content)
+            if self.supabase:
+                # Get all individual reports from Supabase
+                reports = self.supabase.get_all_latest_reports()
+                if reports:
+                    logger.info(f"Found {len(reports)} individual reports from Supabase")
+                    success_count = 0
+                    for report_data in reports:
+                        app_name = report_data["app_name"]
+                        report_content = report_data["report_content"]
+                        logger.info(f"Sending report for {app_name} to {chat_id}...")
+                        try:
+                            result = await self.send_message(chat_id, report_content)
+                            if result:
+                                success_count += 1
+                                logger.info(f"✅ Report for {app_name} sent successfully to {chat_id}")
+                            else:
+                                logger.error(f"❌ Failed to send report for {app_name} to {chat_id}")
+                        except Exception as e:
+                            logger.error(f"❌ Error sending report for {app_name}: {e}")
                     
-                    if result:
-                        logger.info(f"✅ Report sent successfully to {chat_id}")
+                    if success_count > 0:
                         # Update last_report_sent_at in Supabase
                         if self.supabase:
                             self.supabase.update_subscriber_last_report_sent(chat_id)
-                        await update.message.reply_text("✅ Отчет отправлен!")
+                        await update.message.reply_text(f"✅ Отчеты отправлены! ({success_count} компаний)")
                     else:
-                        logger.error(f"❌ Failed to send report to {chat_id} (send_message returned False)")
-                        await update.message.reply_text("❌ Ошибка при отправке отчета. Попробуйте позже.")
-                    
-                except Exception as e:
-                    logger.error(f"❌ Error sending report: {e}")
-                    logger.error(f"❌ Error type: {type(e).__name__}")
-                    import traceback
-                    logger.error(f"❌ Traceback: {traceback.format_exc()}")
-                    await update.message.reply_text(f"❌ Ошибка при отправке отчета: {e}")
+                        await update.message.reply_text("❌ Ошибка при отправке отчетов. Попробуйте позже.")
+                else:
+                    logger.warning(f"No reports found in Supabase for {chat_id}")
+                    await update.message.reply_text(
+                        "📭 Пока нет доступных отчетов. Первый отчет будет создан при следующем запуске анализа."
+                    )
             else:
-                logger.warning(f"No reports found for {chat_id}")
-                await update.message.reply_text(
-                    "📭 Пока нет доступных отчетов. Первый отчет будет создан при следующем запуске анализа."
-                )
+                # Fallback: use combined report from file
+                report_content = self.get_latest_report()
+                if report_content:
+                    logger.info(f"Found combined report (length: {len(report_content)} characters)")
+                    try:
+                        # Send report (split if too long)
+                        logger.info(f"Sending report to {chat_id}...")
+                        result = await self.send_message(chat_id, report_content)
+                        
+                        if result:
+                            logger.info(f"✅ Report sent successfully to {chat_id}")
+                            await update.message.reply_text("✅ Отчет отправлен!")
+                        else:
+                            logger.error(f"❌ Failed to send report to {chat_id} (send_message returned False)")
+                            await update.message.reply_text("❌ Ошибка при отправке отчета. Попробуйте позже.")
+                        
+                    except Exception as e:
+                        logger.error(f"❌ Error sending report: {e}")
+                        logger.error(f"❌ Error type: {type(e).__name__}")
+                        import traceback
+                        logger.error(f"❌ Traceback: {traceback.format_exc()}")
+                        await update.message.reply_text(f"❌ Ошибка при отправке отчета: {e}")
+                else:
+                    logger.warning(f"No reports found for {chat_id}")
+                    await update.message.reply_text(
+                        "📭 Пока нет доступных отчетов. Первый отчет будет создан при следующем запуске анализа."
+                    )
         except Exception as e:
             logger.error(f"❌ Error in start_command: {e}")
             logger.error(f"❌ Error type: {type(e).__name__}")
