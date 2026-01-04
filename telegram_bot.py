@@ -574,20 +574,20 @@ class TelegramBot:
         message_parts.append("\n🔄 Sync status:")
         
         if sync_status.get('git_token_set', False):
-            message_parts.append("✅ GIT_TOKEN настроен - автоматическая синхронизация включена")
+            message_parts.append("✅ GIT_TOKEN configured - automatic sync enabled")
         else:
-            message_parts.append("⚠️  GIT_TOKEN не настроен - добавьте его в Render Environment Variables")
+            message_parts.append("⚠️  GIT_TOKEN not configured - add it to Render Environment Variables")
         
         if sync_status['is_git_repo']:
             if sync_status['is_committed']:
-                message_parts.append("✅ Файл закоммичен в git")
+                message_parts.append("✅ File committed to git")
             elif sync_status['has_changes']:
-                message_parts.append("⚠️  Есть незакоммиченные изменения")
-                message_parts.append("   Нужно вручную: git add && git commit && git push")
+                message_parts.append("⚠️  Uncommitted changes detected")
+                message_parts.append("   Manual action needed: git add && git commit && git push")
             else:
-                message_parts.append("ℹ️  Файл синхронизирован")
+                message_parts.append("ℹ️  File synchronized")
         else:
-            message_parts.append("⚠️  Не git репозиторий - синхронизация невозможна")
+            message_parts.append("⚠️  Not a git repository - sync not possible")
         
         await update.message.reply_text("\n".join(message_parts))
     
