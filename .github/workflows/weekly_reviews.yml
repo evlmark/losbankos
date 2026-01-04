@@ -69,7 +69,15 @@ jobs:
           echo "No changes to commit"
         else
           git commit -m "Auto: Add latest reports [skip ci]"
-          git push origin main
+          # Use GIT_TOKEN if available, otherwise try GITHUB_TOKEN
+          if [ -n "$GIT_TOKEN" ]; then
+            git remote set-url origin https://$GIT_TOKEN@github.com/${{ github.repository }}.git
+            git push origin main
+          else
+            # Try with GITHUB_TOKEN (requires write permissions in repo settings)
+            git push https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git main
+          fi
         fi
       env:
+        GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
