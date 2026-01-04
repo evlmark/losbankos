@@ -3,9 +3,9 @@ Module for scraping reviews from app stores
 """
 import json
 import xml.etree.ElementTree as ET
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from loguru import logger
 
 try:
@@ -33,9 +33,62 @@ class StoreScraper:
         self.app_name = app_name
         self.store_type = store_type
     
-    def fetch_reviews(self, count: int = 100) -> List[Dict[str, Any]]:
-        """Fetch reviews from the store"""
+    def fetch_reviews(self, count: int = 100, start_date: Optional[datetime] = None, end_date: Optional[datetime] = None) -> List[Dict[str, Any]]:
+        """Fetch reviews from the store
+        
+        Args:
+            count: Maximum number of reviews to fetch
+            start_date: Filter reviews from this date (inclusive)
+            end_date: Filter reviews until this date (inclusive)
+        """
         raise NotImplementedError
+    
+    def _filter_reviews_by_date(self, reviews_data: List[Dict[str, Any]], start_date: Optional[datetime] = None, end_date: Optional[datetime] = None) -> List[Dict[str, Any]]:
+        """Filter reviews by date range"""
+        if not start_date and not end_date:
+            return reviews_data
+        
+        filtered = []
+        for review in reviews_data:
+            review_date = None
+            
+            # Try to get date from different fields
+            if 'date' in review:
+                try:
+                    # App Store format: ISO 8601 string
+                    review_date = datetime.fromisoformat(review['date'].replace('Z', '+00:00'))
+                except:
+                    try:
+                        review_date = datetime.strptime(review['date'], '%Y-%m-%dT%H:%M:%S')
+                    except:
+                        pass
+            
+            if 'at' in review:
+                try:
+                    if isinstance(review['at'], str):
+                        review_date = datetime.fromisoformat(review['at'].replace('Z', '+00:00'))
+                    elif hasattr(review['at'], 'isoformat'):
+                        review_date = review['at']
+                except:
+                    pass
+            
+            if review_date:
+                # Remove timezone for comparison
+                review_date_naive = review_date.replace(tzinfo=None) if review_date.tzinfo else review_date
+                start_naive = start_date.replace(tzinfo=None) if start_date and start_date.tzinfo else start_date
+                end_naive = end_date.replace(tzinfo=None) if end_date and end_date.tzinfo else end_date
+                
+                if start_date and review_date_naive < start_naive:
+                    continue
+                if end_date and review_date_naive > end_naive:
+                    continue
+                
+                filtered.append(review)
+            else:
+                # If we can't parse date, include it (to be safe)
+                filtered.append(review)
+        
+        return filtered
     
     def save_reviews(self, reviews_data: List[Dict[str, Any]]) -> Path:
         """Save reviews to a JSON file"""
@@ -66,17 +119,27 @@ class AppStoreScraper(StoreScraper):
         # Major countries for global reviews
         self.global_countries = ['us', 'mx', 'gb', 'es', 'de', 'fr', 'it', 'ca', 'au', 'br']
     
-    def fetch_reviews(self, count: int = 100) -> List[Dict[str, Any]]:
+    def fetch_reviews(self, count: int = 100, start_date: Optional[datetime] = None, end_date: Optional[datetime] = None) -> List[Dict[str, Any]]:
         """Fetch reviews from App Store using RSS feed"""
         if requests is None:
             raise ImportError("requests library is not installed")
         
+        # Fetch more reviews to account for date filtering (up to 100)
+        fetch_count = min(count * 3, 100) if (start_date or end_date) else count
+        
         if self.all_countries:
-            logger.info(f"Fetching {count} reviews from App Store for {self.app_name} (all countries)")
-            return self._fetch_reviews_global(count)
+            logger.info(f"Fetching {fetch_count} reviews from App Store for {self.app_name} (all countries)")
+            reviews_data = self._fetch_reviews_global(fetch_count)
         else:
-            logger.info(f"Fetching {count} reviews from App Store for {self.app_name} (country: {self.country})")
-            return self._fetch_reviews_single_country(count)
+            logger.info(f"Fetching {fetch_count} reviews from App Store for {self.app_name} (country: {self.country})")
+            reviews_data = self._fetch_reviews_single_country(fetch_count)
+        
+        # Filter by date if specified
+        if start_date or end_date:
+            reviews_data = self._filter_reviews_by_date(reviews_data, start_date, end_date)
+            reviews_data = reviews_data[:count]  # Limit to requested count after filtering
+        
+        return reviews_data
     
     def _fetch_reviews_single_country(self, count: int) -> List[Dict[str, Any]]:
         """Fetch reviews from a single country"""
@@ -239,17 +302,27 @@ class GooglePlayScraper(StoreScraper):
         self.global_countries = ['us', 'mx', 'gb', 'es', 'de', 'fr', 'it', 'ca', 'au', 'br']
         self.global_langs = {'us': 'en', 'mx': 'es', 'gb': 'en', 'es': 'es', 'de': 'de', 'fr': 'fr', 'it': 'it', 'ca': 'en', 'au': 'en', 'br': 'pt'}
     
-    def fetch_reviews(self, count: int = 100) -> List[Dict[str, Any]]:
+    def fetch_reviews(self, count: int = 100, start_date: Optional[datetime] = None, end_date: Optional[datetime] = None) -> List[Dict[str, Any]]:
         """Fetch reviews from Google Play Store"""
         if reviews is None:
             raise ImportError("google-play-scraper is not installed")
         
+        # Fetch more reviews to account for date filtering (up to 100)
+        fetch_count = min(count * 3, 100) if (start_date or end_date) else count
+        
         if self.all_countries:
-            logger.info(f"Fetching {count} reviews from Google Play for {self.app_name} (all countries)")
-            return self._fetch_reviews_global(count)
+            logger.info(f"Fetching {fetch_count} reviews from Google Play for {self.app_name} (all countries)")
+            reviews_data = self._fetch_reviews_global(fetch_count)
         else:
-            logger.info(f"Fetching {count} reviews from Google Play for {self.app_name} (country: {self.country})")
-            return self._fetch_reviews_single_country(count)
+            logger.info(f"Fetching {fetch_count} reviews from Google Play for {self.app_name} (country: {self.country})")
+            reviews_data = self._fetch_reviews_single_country(fetch_count)
+        
+        # Filter by date if specified
+        if start_date or end_date:
+            reviews_data = self._filter_reviews_by_date(reviews_data, start_date, end_date)
+            reviews_data = reviews_data[:count]  # Limit to requested count after filtering
+        
+        return reviews_data
     
     def _fetch_reviews_single_country(self, count: int) -> List[Dict[str, Any]]:
         """Fetch reviews from a single country"""
@@ -332,7 +405,7 @@ class GooglePlayScraper(StoreScraper):
         return all_reviews[:count]  # Return up to requested count
 
 
-def scrape_all_competitors(competitors_config: List[Dict[str, Any]], reviews_per_app: int = 100) -> List[Path]:
+def scrape_all_competitors(competitors_config: List[Dict[str, Any]], reviews_per_app: int = 100, start_date: Optional[datetime] = None, end_date: Optional[datetime] = None) -> List[Path]:
     """
     Scrape reviews for all competitors
     
@@ -344,7 +417,9 @@ def scrape_all_competitors(competitors_config: List[Dict[str, Any]], reviews_per
             - country: str (optional, ignored if all_countries is true)
             - lang: str (optional, for Google Play)
             - all_countries: bool (optional, if true, fetches from multiple countries)
-        reviews_per_app: Number of reviews to fetch per app
+        reviews_per_app: Maximum number of reviews to fetch per app (max 100)
+        start_date: Filter reviews from this date (inclusive)
+        end_date: Filter reviews until this date (inclusive)
     
     Returns:
         List of file paths where reviews were saved
@@ -369,7 +444,9 @@ def scrape_all_competitors(competitors_config: List[Dict[str, Any]], reviews_per
                 logger.error(f"Unknown store type: {store_type} for {name}")
                 continue
             
-            reviews_data = scraper.fetch_reviews(count=reviews_per_app)
+            # Limit to 100 reviews max per app
+            fetch_count = min(reviews_per_app, 100)
+            reviews_data = scraper.fetch_reviews(count=fetch_count, start_date=start_date, end_date=end_date)
             filepath = scraper.save_reviews(reviews_data)
             saved_files.append(filepath)
             

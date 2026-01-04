@@ -49,8 +49,8 @@ jobs:
         # Notification Method
         NOTIFICATION_METHOD: ${{ secrets.NOTIFICATION_METHOD || 'telegram' }}
         
-        # Reviews Configuration (temporarily set to 10 for testing)
-        REVIEWS_PER_APP: ${{ secrets.REVIEWS_PER_APP || '10' }}
+        # Reviews Configuration
+        REVIEWS_PER_APP: ${{ secrets.REVIEWS_PER_APP || '100' }}
       run: |
         python main.py
     

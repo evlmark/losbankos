@@ -42,7 +42,20 @@ def run_analysis():
     
     # Step 1: Scrape reviews
     logger.info("Step 1: Scraping reviews from stores...")
-    review_files = scrape_all_competitors(competitors, reviews_per_app=REVIEWS_PER_APP)
+    
+    # Define date range: December 27, 2024 to January 3, 2025
+    start_date = datetime(2024, 12, 27)
+    end_date = datetime(2025, 1, 3, 23, 59, 59)  # End of day on January 3
+    
+    logger.info(f"📅 Date range: {start_date.strftime('%Y-%m-%d')} to {end_date.strftime('%Y-%m-%d')}")
+    logger.info(f"📊 Max reviews per app: {min(REVIEWS_PER_APP, 100)}")
+    
+    review_files = scrape_all_competitors(
+        competitors, 
+        reviews_per_app=min(REVIEWS_PER_APP, 100),  # Limit to 100 max
+        start_date=start_date,
+        end_date=end_date
+    )
     
     if not review_files:
         logger.error("No reviews were scraped. Exiting.")
