@@ -240,13 +240,16 @@ def run_analysis():
             logger.info("TelegramBot initialized successfully")
             
             # Send individual reports (1 message = 1 company)
+            # Sort reports: BBVA first, then others alphabetically
+            all_reports_sorted = sorted(all_reports, key=lambda x: (x[0] != "BBVA", x[0]))
+            
             logger.info("Creating event loop...")
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
             logger.info("Event loop created, sending reports...")
             
             total_sent = 0
-            for app_name, report in all_reports:
+            for app_name, report in all_reports_sorted:
                 logger.info(f"Sending report for {app_name}...")
                 sent_count = loop.run_until_complete(bot.send_report_to_all_subscribers(report))
                 total_sent += sent_count
