@@ -5,7 +5,7 @@ schedule==1.2.0
 
 # LLM API clients
 openai>=1.55.3
-anthropic==0.18.1
+anthropic>=0.34.0
 
 # Telegram
 python-telegram-bot>=21.0
@@ -29,9 +29,9 @@ uvicorn==0.27.0
 fastapi==0.109.0
 
 # Supabase
-supabase==2.3.4
+supabase>=2.8.0
 psycopg2-binary==2.9.9
 
-# httpx version - compatible with supabase 2.3.4 (requires httpx<0.26)
-# Note: openai>=1.55.3 should work with httpx 0.24-0.25
-httpx>=0.24,<0.26
+# httpx - let pip resolve compatible version automatically
+# supabase 2.8.0+ supports newer httpx versions
+httpx>=0.24
