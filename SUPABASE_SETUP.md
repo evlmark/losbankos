@@ -56,14 +56,45 @@ Supabase упрощает работу с данными:
 - Скопируйте **service_role** ключ (НЕ публикуйте его!)
 - Используйте только для серверных операций
 
-### 2.3 Database Connection String
+### 2.3 Database Connection String (SUPABASE_DB_URL)
 
-1. В Settings выберите **Database**
-2. Найдите раздел **Connection string**
-3. Выберите **URI** вкладку
-4. Скопируйте строку подключения
-5. Замените `[YOUR-PASSWORD]` на пароль, который вы создали при создании проекта
-6. Пример: `postgresql://postgres:[YOUR-PASSWORD]@db.xxxxx.supabase.co:5432/postgres`
+**Где найти:**
+
+1. В левом меню нажмите **⚙️ Settings** (шестеренка внизу слева)
+2. В подменю Settings выберите **Database**
+3. Прокрутите вниз до раздела **Connection string** (или **Connection pooling**)
+4. Вы увидите несколько вкладок: **URI**, **JDBC**, **Golang**, и т.д.
+5. Выберите вкладку **URI**
+6. Вы увидите строку вида:
+   ```
+   postgresql://postgres.[PROJECT-REF]:[YOUR-PASSWORD]@aws-0-[REGION].pooler.supabase.com:6543/postgres
+   ```
+   или
+   ```
+   postgresql://postgres:[YOUR-PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres
+   ```
+
+**Важно:**
+- Замените `[YOUR-PASSWORD]` на пароль, который вы создали при создании проекта Supabase
+- Если вы забыли пароль, его нельзя восстановить - нужно будет создать новый проект или сбросить пароль (если возможно)
+
+**Пример готовой строки:**
+```
+postgresql://postgres:mypassword123@db.abcdefghijklmnop.supabase.co:5432/postgres
+```
+
+**Альтернативный способ (если не видите Connection string):**
+1. В Settings → Database найдите раздел **Connection info**
+2. Там будут указаны:
+   - **Host:** `db.xxxxx.supabase.co`
+   - **Database name:** `postgres`
+   - **Port:** `5432`
+   - **User:** `postgres`
+   - **Password:** ваш пароль (который вы создали)
+3. Соберите строку вручную:
+   ```
+   postgresql://postgres:[PASSWORD]@[HOST]:[PORT]/[DATABASE]
+   ```
 
 ---
 
