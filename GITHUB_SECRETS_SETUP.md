@@ -63,18 +63,27 @@
 
 ---
 
-### 7. Git Token (ОПЦИОНАЛЬНО, но рекомендуется для Render бота)
+### 7. Git Token (ОБЯЗАТЕЛЬНО для автоматического коммита отчетов)
 
 - **Name:** `GIT_TOKEN`
 - **Value:** `ваш_github_personal_access_token`
-- **Описание:** GitHub Personal Access Token для автоматической синхронизации подписчиков из Render бота в репозиторий
+- **Описание:** GitHub Personal Access Token для автоматического коммита отчетов в репозиторий из GitHub Actions
 - **Как создать:**
   1. Перейдите: https://github.com/settings/tokens
   2. Нажмите "Generate new token (classic)"
   3. Выберите права: `repo` (полный доступ к репозиториям)
   4. Скопируйте токен
-- **Где использовать:** Добавьте в Render Environment Variables (не в GitHub Secrets!)
-- **Важно:** Этот токен нужен только для Render бота, чтобы он мог автоматически пушить изменения в `telegram_subscribers.json`
+- **Где использовать:** 
+  - **В GitHub Secrets** (для автоматического коммита отчетов из workflow)
+  - **В Render Environment Variables** (для синхронизации подписчиков из бота)
+- **Важно:** Без этого токена отчеты не будут автоматически коммититься в репозиторий, и бот не сможет их прочитать
+
+**Альтернатива (если не хотите создавать PAT):**
+Настройте права для `GITHUB_TOKEN` в репозитории:
+1. Settings → Actions → General
+2. Scroll down to "Workflow permissions"
+3. Выберите "Read and write permissions"
+4. Нажмите "Save"
 
 ---
 
