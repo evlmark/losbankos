@@ -69,12 +69,47 @@ Supabase упрощает работу с данными:
 
 ## 📋 Шаг 3: Создание таблиц в базе данных
 
-### 3.1 Откройте SQL Editor
+### Вариант A: Автоматическая настройка (Рекомендуется)
+
+1. **Установите зависимости:**
+   ```bash
+   pip install supabase psycopg2-binary
+   ```
+
+2. **Настройте переменные окружения:**
+   
+   Создайте файл `.env` в корне проекта (или добавьте в существующий):
+   ```bash
+   SUPABASE_URL=https://xxxxx.supabase.co
+   SUPABASE_KEY=ваш_anon_public_key
+   SUPABASE_DB_URL=postgresql://postgres:[YOUR-PASSWORD]@db.xxxxx.supabase.co:5432/postgres
+   ```
+   
+   **Важно:** Замените `[YOUR-PASSWORD]` на пароль, который вы создали при создании проекта.
+
+3. **Запустите скрипт настройки:**
+   ```bash
+   python setup_supabase.py
+   ```
+   
+   Скрипт автоматически создаст все таблицы, индексы и политики безопасности.
+
+### Вариант B: Ручная настройка через SQL Editor
+
+Если автоматическая настройка не работает, используйте ручной метод:
+
+#### 3.1 Откройте SQL Editor
 
 1. В левом меню нажмите **SQL Editor**
 2. Нажмите **"New query"**
 
-### 3.2 Создайте таблицу подписчиков
+#### 3.2 Выполните SQL скрипт
+
+Откройте файл `supabase_setup.sql` в проекте, скопируйте весь его содержимое и вставьте в SQL Editor, затем нажмите **"Run"**.
+
+Или выполните SQL по частям:
+
+#### 3.3 Создайте таблицу подписчиков
 
 Вставьте и выполните следующий SQL:
 
@@ -149,7 +184,7 @@ CREATE INDEX IF NOT EXISTS idx_combined_reports_latest ON combined_reports(is_la
 CREATE INDEX IF NOT EXISTS idx_combined_reports_date ON combined_reports(report_date DESC);
 ```
 
-### 3.5 Настройте Row Level Security (RLS)
+### 3.4 Настройте Row Level Security (RLS)
 
 Для безопасности настройте RLS (опционально, но рекомендуется):
 
