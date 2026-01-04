@@ -22,25 +22,28 @@ jobs:
       with:
         version: latest
     
-    - name: Link to Supabase project
+    - name: Login to Supabase
       env:
         SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      run: |
+        echo "Logging in to Supabase..."
+        supabase login --token $SUPABASE_ACCESS_TOKEN
+    
+    - name: Link to Supabase project
+      env:
         SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
       run: |
         echo "Linking to Supabase project..."
-        supabase link --project-ref vqqdmdffssmobsofbnqf --password $SUPABASE_DB_PASSWORD
+        echo "$SUPABASE_DB_PASSWORD" | supabase link --project-ref vqqdmdffssmobsofbnqf
     
     - name: Run migrations
-      env:
-        SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       run: |
         echo "Applying migrations..."
-        supabase db push --db-url "postgresql://postgres:${{ secrets.SUPABASE_DB_PASSWORD }}@db.vqqdmdffssmobsofbnqf.supabase.co:5432/postgres"
+        supabase db push
     
     - name: Verify migrations
-      env:
-        SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       run: |
         echo "✅ Migrations applied successfully"
-        supabase db remote list
+        echo "Checking migration status..."
+        supabase migration list
 
