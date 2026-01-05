@@ -43,18 +43,16 @@ def run_analysis():
     # Step 1: Scrape reviews
     logger.info("Step 1: Scraping reviews from stores...")
     
-    # Define date range: December 27, 2024 to January 3, 2025
-    start_date = datetime(2024, 12, 27)
-    end_date = datetime(2025, 1, 3, 23, 59, 59)  # End of day on January 3
+    # Get last 50 reviews per app per store (no date filtering for baseline report)
+    reviews_per_app = min(REVIEWS_PER_APP, 50)  # Limit to 50 for baseline
     
-    logger.info(f"📅 Date range: {start_date.strftime('%Y-%m-%d')} to {end_date.strftime('%Y-%m-%d')}")
-    logger.info(f"📊 Max reviews per app: {min(REVIEWS_PER_APP, 100)}")
+    logger.info(f"📊 Fetching last {reviews_per_app} reviews per app per store (baseline report, no date filter)")
     
     review_files = scrape_all_competitors(
         competitors, 
-        reviews_per_app=min(REVIEWS_PER_APP, 100),  # Limit to 100 max
-        start_date=start_date,
-        end_date=end_date
+        reviews_per_app=reviews_per_app,
+        start_date=None,  # No date filtering
+        end_date=None
     )
     
     if not review_files:

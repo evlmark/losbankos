@@ -30,7 +30,7 @@ SCHEDULE_DAY_OF_WEEK = os.getenv("SCHEDULE_DAY_OF_WEEK", "monday")
 SCHEDULE_TIME = os.getenv("SCHEDULE_TIME", "09:00")
 
 # Reviews Configuration
-REVIEWS_PER_APP = int(os.getenv("REVIEWS_PER_APP", "100"))
+REVIEWS_PER_APP = int(os.getenv("REVIEWS_PER_APP", "50"))
 
 # Git Configuration (for syncing subscribers) - DEPRECATED, using Supabase now
 GIT_TOKEN = os.getenv("GIT_TOKEN")  # GitHub Personal Access Token for pushing changes
