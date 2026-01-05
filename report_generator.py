@@ -666,8 +666,14 @@ Be specific and highlight key problems. Group similar problems together. If a pr
         # Sentiment analysis
         sentiment_data = self.analyze_sentiment(all_reviews)
         
+        # Count positive and negative reviews for context
+        positive_reviews_count = overall_stats['positive_count']
+        negative_reviews_count = overall_stats['negative_count']
+        
         # Positive feedback
         report_lines.append("✅ What users write positively")
+        if positive_reviews_count > 0:
+            report_lines.append(f"(Based on {positive_reviews_count} positive review{'s' if positive_reviews_count != 1 else ''})")
         report_lines.append("")
         
         positive_summary = sentiment_data.get('positive_summary', '')
@@ -723,6 +729,8 @@ Be specific and highlight key problems. Group similar problems together. If a pr
         
         report_lines.append("")
         report_lines.append("❌ What users write negatively")
+        if negative_reviews_count > 0:
+            report_lines.append(f"(Based on {negative_reviews_count} negative review{'s' if negative_reviews_count != 1 else ''})")
         report_lines.append("")
         
         negative_summary = sentiment_data.get('negative_summary', '')
