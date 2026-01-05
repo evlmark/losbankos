@@ -438,12 +438,19 @@ class TelegramBot:
         """Handle /start command"""
         try:
             chat_id = update.effective_chat.id
-            logger.info(f"Received /start command from chat_id: {chat_id}")
+            logger.info(f"🔵 Received /start command from chat_id: {chat_id}")
+            logger.info(f"🔵 Update object: {update}")
+            logger.info(f"🔵 Message: {update.message}")
             
             # Add user to subscribers
-            logger.info(f"Adding user {chat_id} to subscribers...")
-            self.save_subscriber(chat_id)
-            logger.info(f"User {chat_id} added to subscribers")
+            logger.info(f"🔵 Step 1: Adding user {chat_id} to subscribers...")
+            try:
+                self.save_subscriber(chat_id)
+                logger.info(f"✅ Step 1 complete: User {chat_id} added to subscribers")
+            except Exception as e:
+                logger.error(f"❌ Step 1 failed: Error adding subscriber: {e}")
+                import traceback
+                logger.error(f"❌ Traceback: {traceback.format_exc()}")
             
             # Send welcome message
             welcome_text = (
@@ -455,50 +462,94 @@ class TelegramBot:
                 "Loading the latest report..."
             )
             
-            logger.info(f"Sending welcome message to {chat_id}...")
-            await update.message.reply_text(welcome_text)
-            logger.info(f"Welcome message sent to {chat_id}")
+            logger.info(f"🔵 Step 2: Sending welcome message to {chat_id}...")
+            try:
+                await update.message.reply_text(welcome_text)
+                logger.info(f"✅ Step 2 complete: Welcome message sent to {chat_id}")
+            except Exception as e:
+                logger.error(f"❌ Step 2 failed: Error sending welcome message: {e}")
+                import traceback
+                logger.error(f"❌ Traceback: {traceback.format_exc()}")
+                raise
             
             # Try to update reports from repository before reading (only for file-based fallback)
             if not self.supabase:
-                logger.info("Updating reports from repository...")
-                self._update_reports_from_repo()
+                logger.info("🔵 Step 3: Updating reports from repository...")
+                try:
+                    self._update_reports_from_repo()
+                    logger.info("✅ Step 3 complete: Reports updated from repository")
+                except Exception as e:
+                    logger.warning(f"⚠️  Step 3 warning: Could not update reports from repo: {e}")
             
             # Send individual reports (1 message = 1 company)
-            logger.info("Looking for latest reports...")
+            logger.info(f"🔵 Step 4: Looking for latest reports...")
+            logger.info(f"🔵 Using Supabase: {self.supabase is not None}")
             
             if self.supabase:
-                # Get all individual reports from Supabase
-                reports = self.supabase.get_all_latest_reports()
-                if reports:
-                    logger.info(f"Found {len(reports)} individual reports from Supabase")
-                    success_count = 0
-                    for report_data in reports:
-                        app_name = report_data["app_name"]
-                        report_content = report_data["report_content"]
-                        logger.info(f"Sending report for {app_name} to {chat_id}...")
-                        try:
-                            result = await self.send_message(chat_id, report_content)
-                            if result:
-                                success_count += 1
-                                logger.info(f"✅ Report for {app_name} sent successfully to {chat_id}")
-                            else:
-                                logger.error(f"❌ Failed to send report for {app_name} to {chat_id}")
-                        except Exception as e:
-                            logger.error(f"❌ Error sending report for {app_name}: {e}")
+                logger.info("🔵 Step 4a: Getting reports from Supabase...")
+                try:
+                    # Get all individual reports from Supabase
+                    reports = self.supabase.get_all_latest_reports()
+                    logger.info(f"🔵 Step 4a result: Found {len(reports)} individual reports from Supabase")
                     
-                    if success_count > 0:
-                        # Update last_report_sent_at in Supabase
-                        if self.supabase:
-                            self.supabase.update_subscriber_last_report_sent(chat_id)
-                        await update.message.reply_text(f"✅ Reports sent! ({success_count} companies)")
+                    if reports:
+                        logger.info(f"✅ Step 4a complete: Found {len(reports)} reports")
+                        success_count = 0
+                        for idx, report_data in enumerate(reports, 1):
+                            app_name = report_data["app_name"]
+                            report_content = report_data["report_content"]
+                            logger.info(f"🔵 Step 4b.{idx}: Sending report for {app_name} to {chat_id}...")
+                            logger.info(f"🔵 Report length: {len(report_content)} characters")
+                            try:
+                                result = await self.send_message(chat_id, report_content)
+                                if result:
+                                    success_count += 1
+                                    logger.info(f"✅ Step 4b.{idx} complete: Report for {app_name} sent successfully to {chat_id}")
+                                else:
+                                    logger.error(f"❌ Step 4b.{idx} failed: Failed to send report for {app_name} to {chat_id}")
+                            except Exception as e:
+                                logger.error(f"❌ Step 4b.{idx} failed: Error sending report for {app_name}: {e}")
+                                import traceback
+                                logger.error(f"❌ Traceback: {traceback.format_exc()}")
+                        
+                        if success_count > 0:
+                            logger.info(f"🔵 Step 5: Updating last_report_sent_at for {chat_id}...")
+                            try:
+                                # Update last_report_sent_at in Supabase
+                                if self.supabase:
+                                    self.supabase.update_subscriber_last_report_sent(chat_id)
+                                logger.info(f"✅ Step 5 complete: Updated last_report_sent_at")
+                            except Exception as e:
+                                logger.warning(f"⚠️  Step 5 warning: Could not update last_report_sent_at: {e}")
+                            
+                            logger.info(f"🔵 Step 6: Sending completion message...")
+                            try:
+                                await update.message.reply_text(f"✅ Reports sent! ({success_count} companies)")
+                                logger.info(f"✅ Step 6 complete: Completion message sent")
+                            except Exception as e:
+                                logger.error(f"❌ Step 6 failed: Could not send completion message: {e}")
+                        else:
+                            logger.error(f"❌ No reports were sent successfully")
+                            try:
+                                await update.message.reply_text("❌ Error sending reports. Please try again later.")
+                            except Exception as e:
+                                logger.error(f"❌ Could not send error message: {e}")
                     else:
-                        await update.message.reply_text("❌ Error sending reports. Please try again later.")
-                else:
-                    logger.warning(f"No reports found in Supabase for {chat_id}")
-                    await update.message.reply_text(
-                        "📭 No reports available yet. The first report will be created on the next analysis run."
-                    )
+                        logger.warning(f"⚠️  No reports found in Supabase for {chat_id}")
+                        try:
+                            await update.message.reply_text(
+                                "📭 No reports available yet. The first report will be created on the next analysis run."
+                            )
+                        except Exception as e:
+                            logger.error(f"❌ Could not send 'no reports' message: {e}")
+                except Exception as e:
+                    logger.error(f"❌ Step 4a failed: Error getting reports from Supabase: {e}")
+                    import traceback
+                    logger.error(f"❌ Traceback: {traceback.format_exc()}")
+                    try:
+                        await update.message.reply_text(f"❌ Error loading reports: {e}")
+                    except:
+                        logger.error("❌ Could not send error message to user")
             else:
                 # Fallback: use combined report from file
                 report_content = self.get_latest_report()
