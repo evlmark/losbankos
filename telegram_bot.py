@@ -828,19 +828,26 @@ class TelegramBot:
     def run_polling(self):
         """Start bot polling (for interactive mode)"""
         import time
+        import asyncio
         
         logger.info("🚀 Starting Telegram bot polling...")
         logger.info(f"🚀 Bot token: {self.bot_token[:10]}...{self.bot_token[-5:]}")
         logger.info(f"🚀 Using Supabase: {self.supabase is not None}")
         
-        # Test bot connection first
+        # Test bot connection first (async method needs await)
         try:
             logger.info("🔍 Testing bot connection...")
-            bot_info = self.bot.get_me()
+            async def test_connection():
+                bot_info = await self.bot.get_me()
+                return bot_info
+            
+            bot_info = asyncio.run(test_connection())
             logger.info(f"✅ Bot is connected! Username: @{bot_info.username}, ID: {bot_info.id}")
         except Exception as e:
             logger.error(f"❌ Failed to connect to Telegram API: {e}")
             logger.error("❌ Check your TELEGRAM_BOT_TOKEN")
+            import traceback
+            logger.error(f"❌ Traceback: {traceback.format_exc()}")
             raise
         
         # Wait longer before starting to let old instance stop (during deployment)
