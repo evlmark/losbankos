@@ -86,15 +86,43 @@ class TelegramBot:
             self.application.add_handler(CommandHandler("start", self.start_command))
             self.application.add_handler(CommandHandler("help", self.help_command))
             self.application.add_handler(CommandHandler("subscribers", self.subscribers_command))
+            self.application.add_handler(CommandHandler("ping", self.ping_command))
+            
+            # Add handler for all updates (for debugging)
+            async def log_update(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+                """Log all updates for debugging"""
+                if update.message:
+                    logger.info(f"📥 Received update: message_id={update.message.message_id}, chat_id={update.effective_chat.id}, text={update.message.text}")
+                elif update.callback_query:
+                    logger.info(f"📥 Received callback_query: {update.callback_query.data}")
+                else:
+                    logger.info(f"📥 Received update: {type(update)}")
             
             # Add error handler
             async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
                 """Handle errors"""
-                logger.error(f"Exception while handling an update: {context.error}")
+                logger.error(f"❌ Exception while handling an update: {context.error}")
+                logger.error(f"❌ Error type: {type(context.error).__name__}")
+                import traceback
+                logger.error(f"❌ Traceback: {traceback.format_exc()}")
                 if "Conflict" in str(context.error):
-                    logger.warning("Bot conflict - another instance may be running. This is normal during deployment.")
+                    logger.warning("⚠️  Bot conflict - another instance may be running. This is normal during deployment.")
+                # Try to send error message to user if possible
+                if update and hasattr(update, 'effective_chat'):
+                    try:
+                        await context.bot.send_message(
+                            chat_id=update.effective_chat.id,
+                            text=f"❌ An error occurred: {context.error}"
+                        )
+                    except:
+                        pass
             
             self.application.add_error_handler(error_handler)
+            
+            # Log when bot is ready
+            logger.info("✅ Telegram bot initialized successfully")
+            logger.info(f"✅ Bot token: {self.bot_token[:10]}...{self.bot_token[-5:]}")
+            logger.info(f"✅ Using Supabase: {self.supabase is not None}")
             
         except Exception as e:
             logger.error(f"Error initializing Telegram bot: {e}")
@@ -588,6 +616,18 @@ class TelegramBot:
             except:
                 logger.error("❌ Could not send error message to user")
     
+    async def ping_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """Handle /ping command - simple test to check if bot is working"""
+        try:
+            chat_id = update.effective_chat.id
+            logger.info(f"🏓 Received /ping command from chat_id: {chat_id}")
+            await update.message.reply_text("🏓 Pong! Bot is working!")
+            logger.info(f"✅ Ping response sent to {chat_id}")
+        except Exception as e:
+            logger.error(f"❌ Error in ping_command: {e}")
+            import traceback
+            logger.error(f"❌ Traceback: {traceback.format_exc()}")
+    
     async def help_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """Handle /help command"""
         help_text = (
@@ -595,6 +635,7 @@ class TelegramBot:
             "Commands:\n"
             "/start - subscribe to reports and get the latest report\n"
             "/help - show this help\n"
+            "/ping - check if bot is working\n"
             "/subscribers - show subscriber count (admin only)\n\n"
             "The bot automatically sends new reports to all subscribed users."
         )
@@ -788,15 +829,28 @@ class TelegramBot:
         """Start bot polling (for interactive mode)"""
         import time
         
-        logger.info("Starting Telegram bot polling...")
+        logger.info("🚀 Starting Telegram bot polling...")
+        logger.info(f"🚀 Bot token: {self.bot_token[:10]}...{self.bot_token[-5:]}")
+        logger.info(f"🚀 Using Supabase: {self.supabase is not None}")
+        
+        # Test bot connection first
+        try:
+            logger.info("🔍 Testing bot connection...")
+            bot_info = self.bot.get_me()
+            logger.info(f"✅ Bot is connected! Username: @{bot_info.username}, ID: {bot_info.id}")
+        except Exception as e:
+            logger.error(f"❌ Failed to connect to Telegram API: {e}")
+            logger.error("❌ Check your TELEGRAM_BOT_TOKEN")
+            raise
         
         # Wait longer before starting to let old instance stop (during deployment)
-        logger.info("Waiting 30 seconds for any old instances to stop...")
+        logger.info("⏳ Waiting 30 seconds for any old instances to stop...")
         time.sleep(30)
         
         # Now start polling - run_polling will handle its own event loop
         try:
-            logger.info("Starting polling...")
+            logger.info("🔄 Starting polling...")
+            logger.info("🔄 Bot is now listening for updates...")
             self.application.run_polling(
                 allowed_updates=Update.ALL_TYPES,
                 drop_pending_updates=True,  # Drop pending updates to avoid conflicts
@@ -829,9 +883,20 @@ class TelegramBot:
 def run_bot():
     """Run bot in polling mode"""
     try:
+        logger.info("=" * 50)
+        logger.info("🤖 Initializing Telegram Bot...")
+        logger.info("=" * 50)
         bot = TelegramBot()
+        logger.info("=" * 50)
+        logger.info("🚀 Starting bot polling...")
+        logger.info("=" * 50)
         bot.run_polling()
+    except KeyboardInterrupt:
+        logger.info("🛑 Bot stopped by user")
     except Exception as e:
-        logger.error(f"Error running bot: {e}")
+        logger.error(f"❌ Error running bot: {e}")
+        logger.error(f"❌ Error type: {type(e).__name__}")
+        import traceback
+        logger.error(f"❌ Traceback: {traceback.format_exc()}")
         raise
 
