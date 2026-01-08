@@ -16,6 +16,7 @@ class HealthCheckHandler(BaseHTTPRequestHandler):
     
     def do_GET(self):
         if self.path == '/health' or self.path == '/':
+            logger.info(f"🏥 Health check request from {self.client_address[0]}")
             self.send_response(200)
             self.send_header('Content-type', 'text/plain')
             self.end_headers()
@@ -25,8 +26,8 @@ class HealthCheckHandler(BaseHTTPRequestHandler):
             self.end_headers()
     
     def log_message(self, format, *args):
-        # Suppress default logging
-        pass
+        # Suppress default logging, but log to our logger
+        logger.debug(f"HTTP {args[0]} {args[1]} {args[2]}")
 
 
 def run_health_server():

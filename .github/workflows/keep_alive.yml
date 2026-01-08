@@ -1,0 +1,31 @@
+name: Keep Bot Alive
+
+on:
+  schedule:
+    # Run every 10 minutes to keep Render free tier awake
+    - cron: '*/10 * * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping bot health endpoint
+        run: |
+          # Get Render service URL from environment or use default
+          RENDER_URL="${RENDER_SERVICE_URL:-https://losbankos-bot.onrender.com}"
+          
+          echo "🔄 Pinging bot at $RENDER_URL/health..."
+          
+          # Try to ping the health endpoint
+          response=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 "$RENDER_URL/health" || echo "000")
+          
+          if [ "$response" = "200" ]; then
+            echo "✅ Bot is alive! (HTTP $response)"
+          elif [ "$response" = "000" ]; then
+            echo "⚠️  Bot is waking up... (timeout or connection error)"
+          else
+            echo "❌ Bot health check failed (HTTP $response)"
+            exit 1
+          fi
+
