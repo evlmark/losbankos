@@ -11,8 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Ping bot health endpoint
+        env:
+          RENDER_SERVICE_URL: ${{ secrets.RENDER_SERVICE_URL }}
         run: |
-          # Get Render service URL from environment or use default
+          # Get Render service URL from GitHub secret or use default
           RENDER_URL="${RENDER_SERVICE_URL:-https://losbankos-bot.onrender.com}"
           
           echo "🔄 Pinging bot at $RENDER_URL/health..."
@@ -24,8 +26,10 @@ jobs:
             echo "✅ Bot is alive! (HTTP $response)"
           elif [ "$response" = "000" ]; then
             echo "⚠️  Bot is waking up... (timeout or connection error)"
+            echo "⚠️  This is normal if bot was sleeping. It will wake up in ~50 seconds."
           else
             echo "❌ Bot health check failed (HTTP $response)"
+            echo "ℹ️  Check that RENDER_SERVICE_URL secret is set correctly"
             exit 1
           fi
 
