@@ -1,58 +1,57 @@
 📱 BBVA
 
-📅 Report Date: 2026-10-05 17:36:02
+📅 Report Date: 2026-10-12 18:22:31
 
 📊 Total reviews this week: 99
 
-Positive (4-5⭐): 63 (63.6%)
-Neutral (3⭐): 6 (6.1%)
-Negative (1-2⭐): 30 (30.3%)
+Positive (4-5⭐): 58 (58.6%)
+Neutral (3⭐): 5 (5.1%)
+Negative (1-2⭐): 36 (36.4%)
 
 ✅ What users write positively
-(Based on 63 positive reviews)
+(Based on 58 positive reviews)
 
-- Excellent service: Many users emphasize the great service they received, highlighting satisfaction with customer interactions.
-- User-friendly application: Several reviews mention the application as useful, easy to navigate, and beneficial for managing finances.
-- Overall satisfaction: Users express high levels of contentment with the product, often using terms like "excellent," "perfect," and "magnificent."
-- Trustworthy institution: Some reviewers indicate that they feel secure using the bank for various transactions, including saving and credit activities.
-- Desire for additional features: A few users express a wish for more promotions or assistance related to specific services, indicating engagement and interest in the offerings.
+- Excellent overall experience with the service provided.
+- High praise for professionalism and helpfulness of bank staff, including executives and customer service representatives.
+- User-friendly application that is easy to use and functional.
+- Reliable and trustworthy banking services.
+- Fast and efficient operations, with users appreciating the quick service.
+- General satisfaction expressed with various aspects of the bank, suggesting a strong positive sentiment among users.
 
 Relevant quotes:
 
-1. "excelente, solo falta que me manden promociones de tarjetas de crédito 😔" (Excellent, I just need them to send me credit card promotions. 😔)
+1. "excelente, solo falta que me manden promociones de tarjetas de crédito 😔" (Excellent, I just need them to send me credit card promotions 😔)
 2. "Seguir trabajando en mejorar su fluidez y mas opciones dentro de la banca móvil" (Continue working on improving your fluency and more options within mobile banking.)
-3. "Antonio de Jesús Altamirano romero" (Antonio de Jesús Altamirano Romero)
+3. "acabo de descargar la aplicación y voy a ver qué tal a ver cómo funciona" (I just downloaded the app and I'm going to see how it works.)
 
 ❌ What users write negatively
-(Based on 30 negative reviews)
+(Based on 36 negative reviews)
 
-- Performance Issues**
-- The app is described as extremely slow, with users reporting long loading times and delays when trying to log in or perform actions.
-- Users mention that the app often gets stuck on loading screens or fails to open entirely after updates.
-- Login and Access Problems**
-- Multiple users have encountered errors related to logging in, including invalid security codes and connection errors when using biometric access.
-- Some users have expressed frustration with not being able to access their accounts even after updates, leading to the need for repetitive attempts to log in.
-- Functionality Limitations**
-- Reviewers note a lack of essential features, such as the inability to manage multiple accounts, transfer funds, or view digital cards and transactions clearly.
-- Users report missing functionalities that were available in the previous version of the app, leading to dissatisfaction regarding the overall experience.
-- Frequent Updates Causing Issues**
-- Users criticize the app for having disruptive updates that lead to further complications, such as lost configurations and inability to access necessary features post-update.
-- Poor Customer Support and Usability**
-- Many users have expressed disappointment in the app's design, labeling it as overly simplistic and lacking user-friendly features.
-- Several reviews reflect on the ineffectiveness of customer support, with users being redirected to general help lines that do not address their specific issues.
-- Security Concerns**
-- A few users reported experiences with potential scams related to the app, raising alarms about its security and the trustworthiness of its operations.
-- Increased Fees and Limited Options**
-- Some reviews mention unexpected fees for transferring to other banks and limitations on functionalities that might force users to consider switching banks.
-Overall, users convey a strong sense of frustration regarding the app's performance, functionality, and the overall banking experience it provides.
+- Access Issues**
+- Users frequently report being unable to access the app or their accounts, with problems including errors during login, such as invalid security codes or connection errors.
+- Many users express frustration over the app's slow performance, with lengthy loading times and unresponsive features.
+- Poor Customer Support**
+- Several reviews highlight inadequate support from customer service, with users stating that responses to queries take an excessively long time (e.g., 5 hours).
+- Users have reported difficulties in receiving help both in-branch and via phone, leaving them unable to resolve issues related to their accounts.
+- App Reliability and Functionality**
+- Many users complain about the app's frequent crashes or failures, including inability to complete basic functions like viewing transaction history or making payments.
+- Specific features that are lacking include the ability to manage multiple accounts, perform digital transactions, and receive detailed transaction information.
+- Frequent Updates and Maintenance Issues**
+- Users express dissatisfaction with the app's repeated prompts for updates, which often do not resolve existing issues, leading to frustration over perceived lack of improvement.
+- Some reviews mention that the app is supposed to be better for business accounts but fails to meet expectations, with comparisons to more reliable banking apps.
+- Limited Features**
+- Users find the app overly simplistic and lacking in essential features such as digital turn-taking, online purchases, and account management functionalities.
+- Specific complaints include inability to link credit accounts, perform digital transactions, or view detailed transaction information, which are crucial for business users.
+- General User Experience**
+- The overall sentiment is that the app is poorly designed and does not meet user needs, with many expressing a desire to switch to different banking solutions due to their negative experiences.
 
 Relevant quotes:
 
-1. "maldita la hora en que se les ocurrió actualizar la aplicación y después separar la de empresas con la de México, un desastre, las dos apps chocan, nunca puedo accesar y siempre tengo que estar instalando y desinstalando" (Damn the hour they decided to update the app and then separate the business one from the one for Mexico, a disaster, the two apps clash, I can never access it and I always have to keep installing and uninstalling.)
-2. "El desarrollo de la app es pésimo, es una experiencia nada grata en todos los sentidos, no guarda las cuentas, la abres y se pone a cargar se podría quedar así todo el día. Banco azteca funciona muchísimo mejor que esta cosa. La uso por que no tengo alternativa para el negocio, pongan profesionales a desarrollar sus apps,muchos empresarios dependemos de ello" (The development of the app is terrible, it is an unpleasant experience in every way, it doesn't save accounts, you open it and it just loads, it could stay like that all day. Banco Azteca works much better than this thing. I use it because I have no alternative for the business, hire professionals to develop your apps, many entrepreneurs depend on it.)
-3. "Es terrible hiper lenta, tengo mas de 25 min intentando entrar a mi cuenta" (It's terribly slow, I've been trying to access my account for over 25 minutes.)
-4. "Para variar cada que hay una actualización se descompone. No puedes entrar se queda horas pensando y que puede tardar y que tengas paciencia y jamás abre. Hay que hacerlo muchas veces y luego ni así logras entrar. URGE QUE LO ARREGLEN NO SE PUEDE USAR" (For a change, every time there is an update, it breaks down. You can't get in; it stays thinking for hours and may take time, so you need to be patient, and it never opens. You have to do it many times, and even then, you can't get in. IT'S URGENT THAT THEY FIX IT; IT CAN'T BE USED.)
-5. "cuenta y aplicación Qlera" (Qlera account and application)
+1. "Pésima app no puedo accesar desde mi celular desde que adquiri la terminal, los asesores de la sucursal balbuena nada mas te dan tus papeles y no te asesoran en el uso, les mandas mensaje y te contestan 5 hrs después. lo hacen para que acceses a la banca y te cobren comisiones. Muy mala experiencia de servicio." (Terrible app, I can't access it from my phone since I got the terminal, the advisors at the Balbuena branch just give you your papers and don't help you with the usage, you send them a message and they reply 5 hours later. They do it so you access the banking and they can charge you fees. Very bad service experience.)
+2. "pésimo servicio la app pésima el banco pésimo,le falta mucho ala aplicación,dice que se está actualizando y no entras pasan horas y nada ya está actualizada por lo que veo no actualizan nunca ala aplicación ni siquiera tiene para desactivar la cuenta o congelar es la peor app están muy lejos de la primera app básica se supone que debe de ser mejor la de empresas pero no." (terrible service the app is terrible the bank is terrible, it lacks a lot in the application, it says it is updating and you can't get in hours go by and nothing is updated as far as I can see they never update the application it doesn't even have the option to deactivate or freeze the account it is the worst app they are very far from the first basic app it is supposed to be better for businesses but it is not.)
+3. "por qué me pude calificar si no la tengo o acaso me roban información" (Why could I be rated if I don't have it, or are they stealing my information?)
+4. "Siempre tengo problema, ahora me dice que error en la conexión, llamé a la línea y que según tenía un cargo de 15 pesos, mi aplicación está actualizada, en la banca me dice que tengo un estatus diferente a la activación, luego me dice registrate, siempre un tema" (I always have a problem, now it tells me there is an error in the connection, I called the hotline and they said I had a charge of 15 pesos, my app is updated, in the banking it tells me I have a status different from activation, then it tells me to register, always an issue.)
+5. "nunca pude instalar la app de BBVA" (I could never install the BBVA app.)
 
 📊 Changes from last week
 
@@ -60,7 +59,7 @@ No data for comparison (this is the first report).
 
 📱 Fondeadora
 
-📅 Report Date: 2026-10-05 17:36:21
+📅 Report Date: 2026-10-12 18:22:47
 
 📊 Total reviews this week: 76
 
@@ -71,65 +70,61 @@ Negative (1-2⭐): 46 (60.5%)
 ✅ What users write positively
 (Based on 26 positive reviews)
 
-- Excellent user experience: Many users describe the app as easy to use, allowing for smooth management of their banking needs from their phones.
-- Security: Users express confidence in the safety of their funds, highlighting the app's secure features.
-- Reliable and efficient service: Reviewers appreciate the quick processing of transactions and the absence of extra fees or commissions, making it a cost-effective choice.
-- Continuous updates and improvements: The app is noted for its regular updates, which enhance functionality and user experience.
-- Good customer support: Users report positive experiences with customer support, indicating that help is readily available when needed.
-- Modern banking solution: Reviewers view the app as a contemporary banking option that surpasses traditional banking methods.
+- User-Friendly App**: Many users appreciate the app's ease of use, with several noting that it is straightforward and convenient for managing their banking needs.
+- Security and Trust**: Reviewers frequently highlight the security of their funds, expressing confidence in the safety of the banking platform.
+- Excellent Customer Support**: Positive experiences with customer support are mentioned, particularly in situations where users faced issues accessing the app.
+- No Hidden Fees**: Users commend the bank for its transparency regarding fees, specifically mentioning the absence of additional charges and commissions.
+- Convenience for Business Management**: Several reviews emphasize the app's effectiveness for business banking, facilitating tasks such as quick transfers and transaction monitoring.
+- Regular Updates**: Users appreciate that the app is continuously updated, indicating a commitment to improvement and responsiveness to user needs.
+- Modern Banking Experience**: Many reviews reflect a sentiment that this bank offers a contemporary and innovative banking experience compared to traditional banks.
 
 Relevant quotes:
 
-1. "Muy buena app me gusta y además tu dinero está seguro 🔐" (Very good app, I like it and also your money is safe 🔐)
+1. "All my banking in one place."
 2. "Definitivamente este banco es excelente para personas morales, sin comisiones extra, sin letras pequeñas y membresía súper accesible. 
 
-Estaría excelente que las funciones de las web las implementen en una aplicación para iPad para así tener acceso directo sin entrar hasta un navegador cuando estamos viajando y haciendo operaciones." (This bank is definitely excellent for legal entities, with no extra fees, no fine print, and super accessible membership. 
+Estaría excelente que las funciones de las web las implementen en una aplicación para iPad para así tener acceso directo sin entrar hasta un navegador cuando estamos viajando y haciendo operaciones." (This bank is definitely excellent for legal entities, with no extra fees, no fine print, and a super accessible membership. 
 
-It would be great if they implemented the web functions in an iPad app so that we can have direct access without having to go through a browser when we are traveling and doing transactions.)
+It would be great if the functions of the website were implemented in an iPad app so that we can have direct access without having to enter a browser while traveling and conducting transactions.)
 3. "execelente banca la recomiendo" (excellent bank I recommend it)
 
 ❌ What users write negatively
 (Based on 46 negative reviews)
 
-- Poor Application Performance**
-- Users frequently report that the app does not allow them to log in, often getting stuck on loading screens or presenting errors with login credentials.
-- Many users mention that they cannot create new accounts or register new payment methods, indicating significant functionality issues.
-- The app is described as unresponsive, with users experiencing black screens or freezing.
-- Inadequate Customer Support**
-- Reviewers express frustration with the lack of effective customer support, citing long response times, unavailability of support channels, and insufficient assistance with issues.
-- Users report that support via chat is unresponsive or offers no meaningful solutions, leading to feelings of helplessness.
-- High Costs and Hidden Fees**
-- Several reviews highlight dissatisfaction with the high monthly fees and unexpected charges, which they feel are unreasonable compared to traditional banking options.
-- Users mention being charged without prior notification and express anger over the lack of transparency regarding fees.
-- Transfer Issues**
-- Many users report being unable to make transfers to other accounts, citing that this feature is frequently disabled or blocked.
-- Users express concern over the inability to access their funds for extended periods, creating problems for business operations.
-- Account Access Problems**
-- Reviews indicate that users have persistent issues accessing their accounts, including receiving errors related to authentication codes or blocked accounts with no resolution in sight.
-- Some users mention their accounts being locked for weeks without a clear path to regain access.
-- Lack of Physical Access and Options**
-- Users are frustrated by the absence of physical locations and the inability to contact a support phone line, which they feel limits their options for assistance.
-- There are also complaints about not being able to use their cards at common retailers, limiting functionality compared to other banking options.
-- Poor User Experience Following Updates**
-- Several reviews note that recent updates have worsened the app's performance, complicating simple tasks like logging in or transferring funds.
-- Users mention that the app now requires excessive validation steps that hinder usability.
-Overall, the reviews depict a significant dissatisfaction with the app's functionality, customer support, and overall user experience, leading to a lack of confidence in the service.
+- Poor Customer Support**
+- Users report that support is unresponsive, often taking 24 to 48 hours to address issues, and many have experienced long wait times without resolution.
+- Difficulties in reaching support through the app or other means, with complaints about long response times or complete lack of communication.
+- Access and Login Issues**
+- Many users are unable to access the app or their accounts, encountering errors with login codes, password resets, and authenticator issues.
+- Some users have had accounts blocked for extended periods without any resolution.
+- App Functionality Problems**
+- The app frequently fails to load, with some users unable to access it at all or experiencing crashes and freezes.
+- Problems with creating new accounts or transferring funds, with many users reporting that the app does not allow transfers or registration of accounts.
+- High Costs and Fees**
+- Users express dissatisfaction with monthly fees and unexpected charges, feeling that the service does not justify the cost.
+- Complaints about hidden fees or charges that were not clearly communicated during the signup process.
+- Limited Features and Usability**
+- Users note a lack of differentiators compared to traditional banks and other fintech options, and express frustration with the app's complexity in validating transactions.
+- Some report that essential features such as making payments or activating physical cards do not function properly.
+- Service Reliability Concerns**
+- Negative experiences related to the reliability of transactions, with reports of delayed payments to vendors and concerns about the safety of their funds.
+- Users indicate that the inability to access funds when needed poses significant risks, especially for businesses.
 
 Relevant quotes:
 
-1. "Cuando vence la sesión no redirecciona al login, no se puede editar nada desde la app, el chat de soporte no se sincroniza con el de la web, cuando se hacen cargos NO MANDA NOTIFICACIONES PUSH!!! 
+1. "malísimo el soporte, por alguna razón desconocida después de ingresar el código de acceso que te mandan por correo nos indica problemas en el acceso y que te contactes a soporte y la respuesta es que te resolverán en 24 a 48 horas hábiles, que empresa de cualquier tamaño puede confiar y prescindir del acceso a su dinero por ese tiempo. En cuanto pueda retirar mis recursos cancelo de inmediato, una lástima de verdad que sean tan malas las nuevas alternativas fuera de los bancos tradicionales" (the support is terrible, for some unknown reason after entering the access code sent to you by email it indicates problems with access and that you should contact support and the response is that they will resolve it in 24 to 48 business hours, what company of any size can trust and do without access to its money for that time. As soon as I can withdraw my resources I will cancel immediately, it’s really a shame that the new alternatives outside traditional banks are so bad.)
+2. "Es la peor opción financiera que hay en el mercado, la mensualidad es demasiado cara para la pésima calidad en el servicio que tienen, difícilmente se puede acceder a la app, siempre te marca error en el mail, te pide que cambies el password, no tienen oficinas, no tienen teléfono de contacto, solo un chat donde jamás responden, nada recomendable." (It is the worst financial option in the market, the monthly fee is too expensive for the poor quality of service they provide, it is difficult to access the app, it always shows an error with the email, it asks you to change the password, they have no offices, they have no contact number, only a chat where they never respond, not recommendable at all.)
+3. "Cuando vence la sesión no redirecciona al login, no se puede editar nada desde la app, el chat de soporte no se sincroniza con el de la web, cuando se hacen cargos NO MANDA NOTIFICACIONES PUSH!!! 
 
 Cuando ocurre algún incidente con el proceso de aumento de transferencias hay que reinstalar la app!!!
 
 como es posible que saquen un producto con errores tan básicos a producción" (When the session expires, it does not redirect to the login, nothing can be edited from the app, the support chat does not sync with the website, when charges are made, IT DOES NOT SEND PUSH NOTIFICATIONS!!!
 
-When there is an incident with the transfer increase process, the app has to be reinstalled!!!
+When there is an incident with the transfer increase process, the app needs to be reinstalled!!!
 
 How is it possible to release a product with such basic errors into production?)
-2. "Es la peor opción financiera que hay en el mercado, la mensualidad es demasiado cara para la pésima calidad en el servicio que tienen, difícilmente se puede acceder a la app, siempre te marca error en el mail, te pide que cambies el password, no tienen oficinas, no tienen teléfono de contacto, solo un chat donde jamás responden, nada recomendable." (It is the worst financial option available in the market, the monthly fee is too expensive for the poor quality of service they provide, it is difficult to access the app, it always shows an error with the email, it asks you to change the password, they have no offices, they have no contact phone number, only a chat where they never respond, not recommended at all.)
-3. "malísimo el soporte, por alguna razón desconocida después de ingresar el código de acceso que te mandan por correo nos indica problemas en el acceso y que te contactes a soporte y la respuesta es que te resolverán en 24 a 48 horas hábiles, que empresa de cualquier tamaño puede confiar y prescindir del acceso a su dinero por ese tiempo. En cuanto pueda retirar mis recursos cancelo de inmediato, una lástima de verdad que sean tan malas las nuevas alternativas fuera de los bancos tradicionales" (The support is terrible; for some unknown reason, after entering the access code they send you by email, it indicates problems with access and tells you to contact support, and the response is that they will resolve it in 24 to 48 business hours. What company of any size can trust and do without access to its money for that time? As soon as I can withdraw my resources, I will cancel immediately. It's really a shame that the new alternatives outside traditional banks are so bad.)
-4. "no permite transferir a otros esta bloqueado por la app ¡No la usen!" (it does not allow transferring to others this is blocked by the app Do not use it!)
-5. "Nunca tienen transferencias, las desabilitan. no recomiendo este banco para empresas. es una pérdida de tiempo" (They never have transfers, they disable them. I do not recommend this bank for businesses. It is a waste of time.)
+4. "era excelente pero desde la última actualización es un relajo, para acceder en el móbil aun con tus datos biométricos tienes que ir al correo y colocarvel código que te mandan, luego para dar de alta a una nueva cuenta para transferencias no es posible desde la app, tienes que ir al navegador de la pc y hacerlo desde ahí, ya me está artando la situación es poco eficiente" (It was excellent, but since the last update, it's a mess. To access it on mobile, even with your biometric data, you have to go to your email and enter the code they send you. Then, to set up a new account for transfers, it's not possible from the app; you have to go to the PC browser and do it from there. I'm getting fed up with the situation; it's not efficient at all.)
+5. "no permite transferir a otros esta bloqueado por la app ¡No la usen!" (does not allow transferring to others this is blocked by the app Do not use it!)
 
 📊 Changes from last week
 
@@ -137,55 +132,57 @@ No data for comparison (this is the first report).
 
 📱 Konfio
 
-📅 Report Date: 2026-10-05 17:36:37
+📅 Report Date: 2026-10-12 18:23:02
 
 📊 Total reviews this week: 99
 
-Positive (4-5⭐): 57 (57.6%)
-Neutral (3⭐): 5 (5.1%)
+Positive (4-5⭐): 56 (56.6%)
+Neutral (3⭐): 6 (6.1%)
 Negative (1-2⭐): 37 (37.4%)
 
 ✅ What users write positively
-(Based on 57 positive reviews)
+(Based on 56 positive reviews)
 
-- User satisfaction with the app's performance, described as "excellent" and "powerful."
-- Intuitive and user-friendly design, making it easy to navigate.
-- Positive feedback on customer service and support provided by the company.
-- Effective credit options that help users grow their businesses, with some users preferring this service over traditional banks.
-- Overall high recommendation rate among users, emphasizing reliability and quality.
+- User Satisfaction**: Many users express high satisfaction with the app, describing it as "excellent" or "very good."
+- Ease of Use**: The app is noted for being simple and effective, making it user-friendly.
+- Loan Services**: Reviewers appreciate the app's functionality for providing loans, highlighting its effectiveness in meeting financial needs.
+- Speed and Efficiency**: Users mention that the service is quick and responsive, with easy access to credit.
+- Customer Support**: Positive remarks are made about the attentive and supportive customer service provided by the app's representatives.
+- Trust and Reliability**: Some users feel a sense of trust and support from the app, especially beneficial for new businesses seeking capital.
+- Potential for Improvement**: A few comments suggest there may be areas for improvement, such as high commissions, but overall satisfaction remains high.
 
 Relevant quotes:
 
-1. "Konfío me ayudó a impulsar el crecimiento de mi negocio en un momento en que ninguna institución bancaria me brindó apoyo. Gracias a su confianza y respaldo, pude acceder al financiamiento que necesitaba para seguir avanzando y alcanzar nuevos objetivos." (Konfío helped me drive the growth of my business at a time when no bank was providing me support. Thanks to their trust and backing, I was able to access the financing I needed to continue moving forward and achieve new goals.)
-2. "La TDC no sirve, no permite ver el NIP. Supuestamente se arregla borrando y reinstalando la app pero no funciona. Es inutilizable físicamente la tarjeta, ojalá arreglen eso. Gracias" (The TDC is not working, it doesn't allow you to see the PIN. Supposedly it gets fixed by deleting and reinstalling the app, but it doesn't work. The card is physically unusable, hopefully they fix that. Thank you.)
-3. "A cada rato llaman molestando a mi padre" (Every so often, they call bothering my father.)
+1. "Ha sido una gran herramienta para poder hacer crecer mi emprendimiento, ya que poco a poco he integrado algunas de las herramientas que ofrece Konfío, como la termina de pagos, que me ha permitido ofrecer a mis clientes planes de compra de mis productos de tecnología o de consultoría en sistemas a meses sin intereses. También me ha permitido hacer uso de un crédito para poder invertir en equipos y publicidad en un plan de pagos fijos y con una tasa de interés competitiva, que sé que en algún momento podrán mejorar. Si tuviera que pedir algo sería solo que los menús de ayuda fueran un poco más amplios en la app, pero en todo lo demás Konfío es una herramienta muy útil para hacer crecer tu negocio y tener un mejor control de tus gastos." (It has been a great tool to help grow my business, as I have gradually integrated some of the tools offered by Konfío, such as the payment terminal, which has allowed me to offer my clients installment plans for purchasing my technology products or consulting services with no interest. It has also enabled me to use credit to invest in equipment and advertising with a fixed payment plan and a competitive interest rate, which I know may improve at some point. If I had to request something, it would be that the help menus in the app were a bit more extensive, but in everything else, Konfío is a very useful tool for growing your business and having better control over your expenses.)
+2. "La TDC no sirve, no permite ver el NIP. Supuestamente se arregla borrando y reinstalando la app pero no funciona. Es inutilizable físicamente la tarjeta, ojalá arreglen eso. Gracias" (The TDC doesn't work, it doesn't allow you to see the PIN. Supposedly it gets fixed by deleting and reinstalling the app, but it doesn't work. The card is physically unusable, I hope they fix that. Thank you.)
+3. "Konfio es una muy buena forma de capitalizar tu negocio. Fácil Ágil y accesible" (Konfio is a very good way to capitalize your business. Easy, agile, and accessible.)
 
 ❌ What users write negatively
 (Based on 37 negative reviews)
 
-- Instability and Performance Issues**
-- The app frequently crashes or becomes unresponsive, requiring users to uninstall and reinstall it (Review 4, 15, 30).
-- Users report being logged out of their sessions repeatedly, needing to re-enter passwords and codes for every transaction (Reviews 7, 21, 28).
-- Poor User Experience**
-- The latest update is criticized for degrading the overall user experience, with users stating it was better in previous versions (Reviews 6, 12).
-- Complicated navigation and excessive security checks (like entering passwords and security codes) hinder usability (Reviews 6, 7, 13).
-- Access Issues**
-- Many users are unable to access essential features or their accounts, leading to frustration and delays in transactions (Reviews 2, 16, 26).
-- Some users experience difficulties with linking devices or services (Review 19).
-- High Fees and Poor Customer Service**
-- Users express dissatisfaction with high-interest rates and hidden charges associated with the service (Reviews 9, 10).
-- Customer service is described as unhelpful, with users often receiving no assistance for their issues (Reviews 3, 13, 20).
-- Lack of Essential Features**
-- Users miss functionalities like calculating commissions quickly and accessing detailed transaction information (Reviews 8, 21).
-- The app does not maintain session continuity, leading to repeated login attempts for each transaction (Reviews 7, 28).
+- App Stability and Functionality Issues**
+- Users report that the app is unstable, frequently crashes, and requires multiple logins. Many users experience being logged out unexpectedly and have to enter passwords repeatedly, which disrupts their workflow.
+- Specific issues include inability to access the main menu, problems with the app freezing after updates, and needing to re-enter passwords or codes for each session.
+- User Experience and Interface Complaints**
+- The recent updates have led to a poor user experience, with many users expressing dissatisfaction with the changes that complicate navigation and operations. Users find themselves switching between apps unnecessarily, which slows down their processes.
+- Difficulties in seeing transaction details and calculating commissions quickly have also been noted.
+- Customer Service and Support Deficiencies**
+- Many users highlight poor customer service, with complaints about unhelpful responses and delays in resolving issues. Some users report being unable to access their credit information or having their inquiries brushed off.
+- High Fees and Charges**
+- Users express frustration over high interest rates, hidden fees, and unexpected charges, particularly concerning annual fees and late payment penalties. Complaints about the lack of transparency in these charges are prevalent.
+- Complexity and Overload of Information Requirements**
+- Several reviews mention that the app demands excessive personal information, including tax-related details, which complicates the registration process and frustrates users.
+- Performance and Speed Concerns**
+- Users report that the app has become slow and inefficient, affecting their ability to conduct business transactions promptly. This is particularly problematic for users who rely on quick transactions with customers.
+Overall, the main issues revolve around app functionality, user experience, customer service, financial charges, and information requirements, all contributing to a negative perception of the application.
 
 Relevant quotes:
 
-1. "Primero empezó a pedir la contraseña cada vez que minimizo y vuelvo a abrir la aplicación y si eso no fuera lo suficientemente engorroso ahora me pide meter la contraseña y luego un código de seguridad, de verdad que es pésimo su sistema, cosa que no sucedía cuando era Sr. Pago." (First, it started asking for the password every time I minimized and reopened the app, and as if that weren't annoying enough, now it asks me to enter the password and then a security code. Their system is really terrible, which didn't happen when it was Sr. Pago.)
-2. "Tenia utilizando Konfio y anteriormente Sr.Pago 9 años y tengo un mes sin poder acceder a mi sesión forma permanente. Cada que se dejo de utilizar la app, se cierra la sesión y para realizar un cobro con la terminal debo volver a entrar a la cuenta, esperar el código de confirmación que a veces llega a veces no y estoy haciendo esperar a mis clientes para poderles realizar su cobro. La aplicación la tengo instalada en dos dispositivos Samsung y tengo el mismo problema en ambos" (I had been using Konfio and previously Sr.Pago for 9 years, and I have been unable to access my session permanently for a month. Every time I stop using the app, the session closes, and to make a charge with the terminal, I have to log back into the account, wait for the confirmation code that sometimes arrives and sometimes does not, and I am making my clients wait so I can charge them. I have the application installed on two Samsung devices, and I have the same problem on both.)
-3. "El producto funciona genial para la empresa pero la app últimamente falla y la tengo que estar desisntalando :'(" (The product works great for the company but the app has been failing lately and I have to keep uninstalling it :'()
-4. "Buenos días. Les comento que en las últimas dos semanas no he podido acceder a mi información del crédito que tengo con ustedes. Ni en el celular, ni tampoco en la computadora. Me gustaría que me apoyaran para acceder a esa información y poder hacer mis pagos." (Good morning. I would like to mention that in the last two weeks I have been unable to access my credit information with you. Neither on my phone nor on my computer. I would appreciate your help in accessing that information so I can make my payments.)
-5. "La aplicación ha tenido problemas los últimos días no se puede acceder al menú principal" (The application has had problems in the last few days; the main menu cannot be accessed.)
+1. "Primero empezó a pedir la contraseña cada vez que minimizo y vuelvo a abrir la aplicación y si eso no fuera lo suficientemente engorroso ahora me pide meter la contraseña y luego un código de seguridad, de verdad que es pésimo su sistema, cosa que no sucedía cuando era Sr. Pago." (First, it started asking for the password every time I minimize and reopen the app, and if that weren't annoying enough, now it asks me to enter the password and then a security code. Their system is really terrible, which didn't happen when it was Sr. Pago.)
+2. "Tenia utilizando Konfio y anteriormente Sr.Pago 9 años y tengo un mes sin poder acceder a mi sesión forma permanente. Cada que se dejo de utilizar la app, se cierra la sesión y para realizar un cobro con la terminal debo volver a entrar a la cuenta, esperar el código de confirmación que a veces llega a veces no y estoy haciendo esperar a mis clientes para poderles realizar su cobro. La aplicación la tengo instalada en dos dispositivos Samsung y tengo el mismo problema en ambos" (I had been using Konfio and previously Sr.Pago for 9 years and I have been unable to access my session permanently for a month. Every time I stop using the app, the session closes and to make a charge with the terminal I have to log back into the account, wait for the confirmation code which sometimes arrives and sometimes does not, and I am making my clients wait to be able to charge them. I have the app installed on two Samsung devices and I have the same problem on both.)
+3. "El producto funciona genial para la empresa pero la app últimamente falla y la tengo que estar desisntalando :'(" (The product works great for the company, but the app has been failing lately, and I have to keep uninstalling it :' ()
+4. "muy mala experiencia perdí mucho tiempo registrando datos Y para que el último me dijeran que es para puras personas registradas ante el sat 😡😡😡😡" (very bad experience I wasted a lot of time registering data and then they told me that it's only for people registered with the tax authority 😡😡😡😡)
+5. "Está mostrando mucho problema porque te saca cada que te sales de la app, cada que cobrar tienes que volver a ingresa, no mantiene la sesión abierta" (It is showing a lot of problems because it logs you out every time you exit the app, and every time you want to charge, you have to log back in; it doesn't keep the session open.)
 
 📊 Changes from last week
 
@@ -193,55 +190,52 @@ No data for comparison (this is the first report).
 
 📱 Banamex
 
-📅 Report Date: 2026-10-05 17:36:50
+📅 Report Date: 2026-10-12 18:23:15
 
 📊 Total reviews this week: 99
 
-Positive (4-5⭐): 24 (24.2%)
-Neutral (3⭐): 10 (10.1%)
-Negative (1-2⭐): 65 (65.7%)
+Positive (4-5⭐): 25 (25.3%)
+Neutral (3⭐): 8 (8.1%)
+Negative (1-2⭐): 66 (66.7%)
 
 ✅ What users write positively
-(Based on 24 positive reviews)
+(Based on 25 positive reviews)
 
-- User-friendly and easy to use: Many reviews highlight the application's simplicity and practicality, making it accessible for users.
-- Efficient and fast: Several users mention the app's speed and efficiency in performing tasks, especially in making transfers.
-- Good overall functionality: Reviewers appreciate that the app meets their basic needs and allows for essential operations.
-- Positive user support experience: Some users note that the app provides good customer service and responses to inquiries.
-- General satisfaction: Many users express a high level of satisfaction with the app, often using phrases like “excellent” and “very good.”
-Overall, users are pleased with the app's performance, ease of use, and effectiveness in handling necessary banking operations.
+- User-friendly and simple to use
+- Fast and efficient performance
+- Practical for essential operations, including transfers
+- Good customer support and responsiveness
+- Generally reliable and secure application
+- Positive overall satisfaction with the app's functionality
 
 Relevant quotes:
 
-1. "en la última actualización es difícil regresar a la pantalla de inicio ,quedo mal configurado el tamaño y queda dura de la pantalla de mi móvil ojalá puedan hacer algo después de hacer cualquier movimiento es difícil casi imposible regresar gracias" (In the latest update, it's difficult to return to the home screen; the size is poorly configured and the screen on my mobile is stiff. I hope they can do something. After making any movement, it's hard, almost impossible to go back. Thank you.)
-2. "Excelente aplicación. 👏👏👏" (Excellent application. 👏👏👏)
-3. "tengo una duda con la CLABE interbancaria si me pudiera pasar los 4 últimos dígitos por favor" (I have a question about the interbank CLABE; could you please send me the last 4 digits?)
+1. "muy bien,simple y de acial acceso" (very good, simple and easily accessible)
+2. "en la última actualización es difícil regresar a la pantalla de inicio ,quedo mal configurado el tamaño y queda dura de la pantalla de mi móvil ojalá puedan hacer algo después de hacer cualquier movimiento es difícil casi imposible regresar gracias" (In the latest update, it's difficult to return to the home screen, the size is poorly configured and the screen of my mobile is stiff; I hope they can do something. After making any movement, it's difficult, almost impossible, to go back. Thank you.)
+3. "Excelente aplicación. 👏👏👏" (Excellent application. 👏👏👏)
 
 ❌ What users write negatively
-(Based on 65 negative reviews)
+(Based on 66 negative reviews)
 
-- App Functionality Issues**
-- Users frequently report being unable to perform basic banking operations such as transferring money, adding accounts, checking transaction histories, and consulting account statements.
-- Many reviews mention that the app is not functional, with users expressing frustration over the inability to access necessary features.
-- Performance and Usability Problems**
-- The app is described as slow and often requires multiple attempts to open, leading to significant user frustration.
-- Users highlight that the interface is poor and not intuitive, complicating simple tasks.
-- Limited Features and Options**
-- Reviewers indicate that the app lacks essential features compared to other banking apps, stating that it is very basic with minimal functions available.
-- There are complaints that the app requires excessive security measures (e.g., needing a Netkey) that hinder usability.
-- Technical Issues**
-- Users report frequent crashes and server issues, with the app closing unexpectedly or failing to update.
-- Many express dissatisfaction with the app's basic design and functionality, comparing it unfavorably to banking apps from other institutions.
-- Overall User Sentiment**
-- The general consensus among reviewers is that the app is highly disappointing and does not meet the expectations of a modern banking application, leading to suggestions to avoid using Banamex altogether.
+- Application Functionality Issues**
+- Users report that the app often fails to perform basic functions such as making transfers, checking account movements, and adding accounts. Many express frustration with the inability to complete transactions.
+- Specific features mentioned as non-functional include the ability to consult secret numbers of credit cards and to obtain digital CVV codes.
+- Performance Problems**
+- The app is frequently described as slow, crashing often, and requiring multiple attempts to open. Users mention that it is not intuitive and difficult to navigate, impacting the overall user experience.
+- Limited Features**
+- Many reviews highlight that the app has very few operational functions, with users stating that it only allows for basic transfers and lacks essential banking functionalities like viewing account movements and statements.
+- Poor User Experience**
+- Overall, users describe the app as poorly designed with a frustrating interface. The lack of updates and modern features is criticized, with comparisons to other banking apps that are perceived as superior.
+- Customer Support Complaints**
+- Users express dissatisfaction with the lack of support from customer service, mentioning that issues are not resolved either in branches or via phone.
 
 Relevant quotes:
 
-1. "Bien chafa, no puedo obtener el cvv digital de mi TC. solo sirve para visualizar y hacer transferencias. cómo un banco con tanto dinero tiene la app mas chafa? Banorte es la mejor, santander también esta bien" (Very lame, I can't get the digital CVV from my credit card. It only works for viewing and making transfers. How does a bank with so much money have such a lame app? Banorte is the best, Santander is also good.)
-2. "Banamex le urge modernizar. Tomen en el celular, en se app hay un mínimo de funciones. Muy malita" (Banamex urgently needs to modernize. On the mobile app, there are very few features. Very poor.)
-3. "Si tienes oportunidad de trabajar con Banamex desaprovechala, es un asco la app y la página web tengo algunos años batallando nunca funciona, nadie te da soluciones y fácil el servidor de cae 1 vez a la semana esta horrible de verdad vayan a otro banco." (If you have the opportunity to work with Banamex, don't take it, the app and the website are terrible. I've been struggling with them for a few years, it never works, no one provides solutions, and the server crashes once a week. It's really horrible, go to another bank.)
-4. "La banca empresarial se bloquea a cada rato, es un show cuando uno olvida llevar consigo la netkey, la app como tal no puedes ver movimientos solo saldos totales, definitivamente cerca de facilitar complica los procesos más simples. Y aguas y bloqueas la netkey net por que no podrás disponer de la plataforma hasta que te envíen claves nuevas" (The business banking keeps getting blocked all the time, it's a hassle when one forgets to bring the netkey, as the app itself only allows you to see total balances, it definitely complicates the simplest processes instead of facilitating them. And be careful, if you block the netkey you won't be able to access the platform until they send you new keys.)
-5. "falla mucho. muy continuamente no me deja realizar. transferencias" (It fails a lot. Very frequently it doesn't allow me to make transfers.)
+1. "Bien chafa, no puedo obtener el cvv digital de mi TC. solo sirve para visualizar y hacer transferencias. cómo un banco con tanto dinero tiene la app mas chafa? Banorte es la mejor, santander también esta bien" (Really bad, I can't get the digital CVV from my credit card. It only works for viewing and making transfers. How does a bank with so much money have the worst app? Banorte is the best, Santander is also good.)
+2. "Pésima aplicación no permite realizar los pagos y se queda trabada. Además si tengo la cuenta empresarial me impide tener la app personal y no puedo realizar ningún trámite, ni siquiera puedo consultar los números secretos de mis tarjetas de crédito. Ni en sucursal, ni vía telefónica te dan una solución" (Terrible app, it doesn't allow payments and gets stuck. Also, if I have a business account, it prevents me from having the personal app and I can't carry out any transactions, not even check the secret numbers of my credit cards. Neither in branch nor by phone do they provide a solution.)
+3. "Si tienes oportunidad de trabajar con Banamex desaprovechala, es un asco la app y la página web tengo algunos años batallando nunca funciona, nadie te da soluciones y fácil el servidor de cae 1 vez a la semana esta horrible de verdad vayan a otro banco." (If you have the opportunity to work with Banamex, don't take it; the app and the website are terrible. I've been struggling for a few years, it never works, no one gives you solutions, and the server crashes once a week. It's really awful; go to another bank.)
+4. "no puedo hacer transferencia" (I can't make a transfer.)
+5. "no sirve, se sale a cada rato" (it doesn't work, it keeps coming off every now and then)
 
 📊 Changes from last week
 
@@ -249,22 +243,22 @@ No data for comparison (this is the first report).
 
 📱 Finom
 
-📅 Report Date: 2026-10-05 17:37:04
+📅 Report Date: 2026-10-12 18:23:27
 
 📊 Total reviews this week: 100
 
 Positive (4-5⭐): 59 (59.0%)
-Neutral (3⭐): 6 (6.0%)
-Negative (1-2⭐): 35 (35.0%)
+Neutral (3⭐): 5 (5.0%)
+Negative (1-2⭐): 36 (36.0%)
 
 ✅ What users write positively
 (Based on 59 positive reviews)
 
-- User-Friendly Interface**: Many users praise the app for being intuitive and easy to use, allowing them to navigate and start using it quickly without a steep learning curve.
-- Excellent Features**: Reviewers highlight the app's great features that work smoothly, particularly for managing finances and business needs.
-- Design and Usability**: The app's design is frequently mentioned as amazing and well-structured, contributing to its overall appeal.
-- Effective Support**: Users appreciate the quick and helpful customer support, which enhances their experience when issues arise.
-- Overall Satisfaction**: Many reviews reflect a high level of satisfaction, with users expressing that the app has significantly improved their financial management and reduced anxiety related to these tasks.
+- User-Friendly Interface**: Many users emphasize that the app is intuitive and easy to use, allowing for a smooth user experience without a steep learning curve.
+- Effective Features**: Reviewers highlight the great features of the app, noting that they work well and enhance functionality, particularly for managing finances.
+- Time-Saving**: Users appreciate the app for its efficiency, stating it helps them perform tasks quickly and easily.
+- Excellent Support**: Some reviews mention prompt and helpful customer support, which adds to the overall positive experience.
+- Overall Satisfaction**: A general sentiment of happiness and satisfaction with the app is prevalent, with users recommending it enthusiastically for both personal and business use.
 
 Relevant quotes:
 
@@ -273,31 +267,33 @@ Relevant quotes:
 3. "Had tried SO many before finally deciding on this one and this is damn good, app is just doing what it should do as the bank itself"
 
 ❌ What users write negatively
-(Based on 35 negative reviews)
+(Based on 36 negative reviews)
 
-- Poor Customer Service**
-- Users frequently complain about unresponsive or ineffective customer support, often encountering automated bots that provide generic responses. Specific instances include unresolved issues with money transfers and account blocking without notice.
-- Complicated and Confusing User Interface (UI)**
-- Many reviews highlight the presence of intrusive features like a prominent AI chatbot that cannot be disabled, which disrupts the user experience. Additionally, users mention that recent updates have altered the app's layout, making it harder to navigate and access account information.
-- Unclear Fees and Charges**
-- Several users express frustration over hidden fees and unclear terms regarding account conditions, with complaints about unexpected charges for standard transactions, leading to a perception of dishonesty in pricing.
-- Account Management Issues**
-- Users report significant problems with account management, including sudden account blocks, difficulties in accessing funds, and delayed processing of transactions. Some have experienced legal troubles resulting from the bank's actions, such as blocking accounts without proper justification.
-- Inadequate Onboarding Process**
-- The onboarding experience is described as problematic, with users facing multiple failed attempts to set up their accounts due to technical issues and poor communication from the support team.
+- Onboarding Issues**
+- Users report multiple failures during the onboarding process, citing technical inadequacies and poor customer support, including ineffective communication and language barriers.
+- Customer Service Deficiencies**
+- Reviewers express frustration with unresponsive customer service and reliance on AI chatbots that provide generic, unhelpful responses. Many users have experienced delays and unresolved issues regarding their accounts and transactions.
+- Account Management Problems**
+- Several users have faced account blocks without prior notice, inability to access funds, and unexplained transaction failures. This has led to significant inconvenience, including issues with bill payments and business operations.
+- Hidden Fees and Misleading Information**
+- Users are frustrated by hidden fees that are not clearly communicated, leading to unexpected charges. Some feel that the claim of a "free" account is misleading.
+- App and User Interface Design Flaws**
+- Reviewers criticize the app's design, particularly the intrusive AI chatbot and ads that disrupt usability. Many find the UI confusing and poorly structured, making it difficult to navigate essential features.
 - Data Privacy Concerns**
-- There are complaints regarding the handling of personal data, including unauthorized use of information and lack of options to opt-out of tracking features, raising concerns about privacy and data security.
-- Aggressive Marketing and Ads**
-- Users criticize the aggressive advertising strategies employed by the bank, citing repetitive and annoying ads that detract from their overall experience with the app.
+- There are serious concerns about data handling and privacy, with users alleging that personal and financial data is shared without consent, often with third-party companies.
+- Repetitive and Aggressive Marketing**
+- Users complain about aggressive advertising tactics for the app, which they find annoying and irrelevant, especially when they have no interest in the service being promoted.
+- Legal and Compliance Issues**
+- Some reviewers mention legal troubles stemming from the bank's actions, including unauthorized requests for customer information and concerns over compliance with local laws.
+- Technical Malfunctions**
+- Issues with app connectivity, such as failure to link with devices or process transactions, have been highlighted, contributing to a negative overall experience.
 
 Relevant quotes:
 
-1. "What a cheap and zero customer service i sent Money as SEPA instant because i need it urgently. it's been 13 days they are unable to solve this issue. Everytime i go to customer service, seems they have bots that just say we are working to locate your money and will respond you within 10 days after 10 days still they copy paste. Very cheap bank i recommend not to use it otherwise you'll stuck."
-2. "ATTENTION: This bank is NOT for Entrepreneurs. If you are a German company and doing business that requires travelling, it's less than useless. They can lock you out of your operating capital at any moment without a notice. Heavens forbid you try to talk to their support, they have an attitude and will just answer you with canned worthless info. Avoid at all costs."
-3. "Ich nutze Finom nun ein Jahr und kann leider nur abraten. Erst gab es intern eine Migration von einem Konto zum anderen und nun funktioniert für beide das Einlesen bei Datev nicht. Die Schnittstelle synchronisiert, aber leider nicht alle Transaktionen. Es fehlen etliche über 2-4 Wochen und danach und davor gibt es Transaktionen. Erklärt das mal dem Finanzamt. Glücklicherweise ist es mir aufgefallen, da soviele Belege keiner Bankbuchung in Datev zugeordnet waren. Meine Anfrage beim Support wurde damit beantwortet, dass ich die Verbindung nochmal neu anlegen soll (was dazu führt alle Belege wieder neu zuzusortieren) und sie das nicht auf ihrer Seite lösen können. 
-Einen Chargeback einzureichen, wird momentan von der Benutzeroberfläche nicht unterstützt. Das gestellte Support Ticket blieb tagelang unbeantwortet. 
-So sehr ich ich auch die Funktion mag, die Belege per Email weiterzuleiten und sie dann häufig richtig automatisch zusortiert werden, verbringe ich aber mit dem gleichen Vorgang nervige Zeit mehrmals durch deren interne Migration, dem führen von zwei Bankkonten (die Zuordnung der Belege wurde dann wieder gelöscht) und der nicht zuverlässigen Übertragung zu Datev und dem damit verbundenen Mehraufwand mit Steuerbüro und co. Die Schnittstellen können auch nicht mehr gelöscht werden, zumindest nicht über das Interface. Ihr seht euch mit sehr vielen Support Tickets enden." (I have been using Finom for a year now and unfortunately can only advise against it. First, there was an internal migration from one account to another, and now the reading for both does not work with Datev. The interface synchronizes, but unfortunately not all transactions. Several are missing over 2-4 weeks, and there are transactions before and after. Try explaining that to the tax office. Fortunately, I noticed it because so many receipts were not assigned to any bank transaction in Datev. My inquiry to support was answered with the suggestion to recreate the connection (which means sorting all receipts again) and that they cannot solve it on their end. Submitting a chargeback is currently not supported by the user interface. The support ticket submitted went unanswered for days. As much as I like the feature of forwarding receipts via email and having them often sorted correctly automatically, I end up spending annoying time multiple times due to their internal migration, managing two bank accounts (the assignment of receipts was deleted again), and the unreliable transmission to Datev, along with the additional effort with the tax office and so on. The interfaces can no longer be deleted, at least not through the interface. You will end up with a lot of support tickets.)
-4. "Here's what a banking app doesn't need: An AI chatbot that prominently takes up 1/3rd of the screen, with an animated banner that cannot be closed, and an UI-breaking icon permanently stuck to the side of the screen. Furthermore, never have I ever consented to my data being fed into this AI. At the very least, there needs to be a setting in the app to disable this chatbot and remove its UI elements. Please! This is not just an annoyance, it's bad UI/UX that actively makes the app hard to use."
+1. "The onboarding process stalled four times, two different days. I have a fine 5G network. Yet, the identification reps couldn't make it work. Their German language skills are very poor. After four failed attempts to send phone number verification which did not arrive, they told me I'm not a good fit for them. What a joke. This company needs to streamline. The onboarding process is a joker — they need to kick out. that provider that loses the customers."
+2. "What a cheap and zero customer service i sent Money as SEPA instant because i need it urgently. it's been 13 days they are unable to solve this issue. Everytime i go to customer service, seems they have bots that just say we are working to locate your money and will respond you within 10 days after 10 days still they copy paste. Very cheap bank i recommend not to use it otherwise you'll stuck."
+3. "ATTENTION: This bank is NOT for Entrepreneurs. If you are a German company and doing business that requires travelling, it's less than useless. They can lock you out of your operating capital at any moment without a notice. Heavens forbid you try to talk to their support, they have an attitude and will just answer you with canned worthless info. Avoid at all costs."
+4. "Das Onboarding ist aufgrund ihrer technischen Unzulänglichkeiten mehrfach gescheitert. Nicht zu empfehlen." (The onboarding has failed multiple times due to its technical shortcomings. Not recommended.)
 5. "Why do you send me emails and you can't do anything for me?" (Why do you send me emails if you can't do anything for me?)
 
 📊 Changes from last week
@@ -306,61 +302,69 @@ No data for comparison (this is the first report).
 
 📱 Revolut Business
 
-📅 Report Date: 2026-10-05 17:37:14
+📅 Report Date: 2026-10-12 18:23:35
 
 📊 Total reviews this week: 100
 
-Positive (4-5⭐): 75 (75.0%)
+Positive (4-5⭐): 73 (73.0%)
 Neutral (3⭐): 0 (0.0%)
-Negative (1-2⭐): 25 (25.0%)
+Negative (1-2⭐): 27 (27.0%)
 
 ✅ What users write positively
-(Based on 75 positive reviews)
+(Based on 73 positive reviews)
 
-- Ease of Use**: Many users highlight the app's user-friendly interface, making it simple to navigate and manage finances.
-- Fast Account Setup**: Several reviews mention the quick and hassle-free process of opening an account.
-- Trustworthiness and Security**: Users express confidence in the app's safety features, emphasizing its reliability and protective measures.
-- Excellent Customer Experience**: Reviews indicate a high level of satisfaction with the overall service, describing it as seamless and efficient.
-- Minor Bugs**: While most feedback is overwhelmingly positive, some users note occasional bugs, particularly regarding balance discrepancies, which could be improved.
-- Good for Business**: A few reviews specifically mention the app's suitability for small businesses, highlighting its utility in managing business finances.
+- User-Friendly Interface**: Many users highlight the app's seamless and simple user interface, making it easy to navigate and use without much effort.
+- Reliable Performance**: Several reviews indicate that the app works consistently well, with users expressing satisfaction in its reliability and overall functionality.
+- Efficient Account Setup**: Users appreciate the quick and straightforward process for setting up accounts, with some noting that the verification process, while lengthy for some, is ultimately manageable.
+- Positive Overall Experience**: Many reviewers express a high level of satisfaction with their experiences, recommending the app and describing it as innovative or the "banking of the future."
+- Ease of Use**: Reviews frequently mention the app's ease of use, with users indicating no significant problems while using it.
+- Professional Design**: Some users commend the professional quality of the app, particularly for business banking.
+- Minor Bugs Mentioned**: A few users mention minor bugs, such as discrepancies in balance displays, but these do not seem to detract significantly from the overall positive experience.
+- Multilingual Praise**: Positive feedback is expressed in multiple languages, indicating a broad appeal and user satisfaction across different demographics.
 
 Relevant quotes:
 
-1. "The ability to create cards for my employees , and automate spend control, expense management plus many more awesome features , at a fair low monthly rate is phenomenal ."
-2. "Revolut surely offers great banking features, fast transfers and good fees and also offers free physical card delivery on account open. I opened it for my LLC and everything going on right place and verification process is great. Love it."
-3. "I really love this app it's super safe and very protective" (I really love this app; it's super safe and very protective.)
+1. "Lovely experience using the app! Seamless user user interface and all the login steps are simple to do and don't require much effort!"
+2. "its fantastic once you get verified... which took me around a year... I own a UK limited company that had been trading for 7 years but it was still a PIA to sort out the fine print. 3 or 4 times I was threatened with account closure... I just I standby adapted my money back to my HSBC until the AI bots decided I was legit... now all good... Be warned read the messages they send you do not ignore them or they will lock your money up for months .... Read the horror stories online.."
+3. "All is so good, daily reports, unlike others you know who green logo who actually stole my money and I had to complain to get the basic statements after the green giant blocked my accounts, biz n private, for no reasons!!!! This solved my situation in minutes and provided a refund. There was also an issue with a business service provider some months ago and the whole process of raising and following the issue was outstanding. It’s an outstanding company, convenient, reliable, technology."
 
 ❌ What users write negatively
-(Based on 25 negative reviews)
+(Based on 27 negative reviews)
 
-- Flawed Onboarding and Verification Process**
-- Users frequently report issues with account verification, often experiencing repeated failures without clear explanations. Complaints highlight a lack of guidance and arbitrary rejections, leading to frustration and wasted time for legitimate businesses attempting to onboard.
-- Account Blocking and Freezing**
-- Many reviews mention sudden account blocks and transaction freezes without warning, often during critical times when users need access to their funds. Customers express dissatisfaction with the support provided during these incidents, which typically consists of generic responses.
-- Poor Customer Service and Communication**
-- Reviewers consistently describe the customer service as unhelpful, rude, and lacking in meaningful communication. Users feel that their concerns are not addressed adequately, and many have faced difficulties in reaching a representative for assistance.
+- Inadequate Customer Support**
+- Multiple users report poor customer service, including unhelpful representatives and lack of meaningful communication regarding account issues.
+- Customers have experienced difficulties in speaking to a human for assistance, with many expressing frustration over the reliance on automated systems.
+- Arbitrary Account Verification and Closure**
+- Users highlight issues with the account verification process, describing it as flawed and lacking transparency. Several accounts were closed without clear explanations, causing distress and frustration for business owners.
+- Customers mention repeated demands for documentation to prove legitimacy, leading to account blocks and delays in accessing funds.
+- Transaction and Transfer Restrictions**
+- Many reviews mention heavy restrictions on transferring funds out of the platform, with some users unable to send money to external accounts despite having built up balances.
+- Users have faced unexpected freezes on accounts and transactions, especially during critical times, which hampers their business operations.
 - Hidden Fees and Unclear Charges**
-- Several users report unexpected fees and charges, particularly when attempting to close accounts or during service suspensions. This has led to accusations of a lack of transparency regarding service costs and conditions.
+- Several reviewers express dissatisfaction with unexpected fees introduced without prior notice, as well as charges for services that were not rendered.
+- Complaints about being charged for suspended services and the lack of transparency around pricing were common.
 - Technical Issues with the App**
-- Users have encountered bugs within the app that hinder functionality, such as issues when trying to update important information or during the account application process itself. These technical problems contribute to an overall negative user experience.
-- Inadequate Support for International Transactions**
-- Some reviews highlight difficulties for US-based users, particularly regarding IBAN support and expensive SWIFT transfers, which complicate transactions and create additional costs for international business dealings.
-- General Discontent with Service Quality**
-- Overall dissatisfaction is expressed, with many users stating that Revolut's service has deteriorated over time. Long-time customers feel that the platform has become less reliable and comparable to traditional banks, leading them to consider closing their accounts.
+- Users report the app being buggy, with crashes occurring during important processes like account applications and updates.
+- The interface is criticized for being non-intuitive and difficult to navigate, leading to frustration among users attempting to perform basic functions.
+- Security and Safety Concerns**
+- Some reviews warn users about the risk of scams and the overall safety of the platform, suggesting that it is not secure for business transactions.
 
 Relevant quotes:
 
-1. "Revolut Business has potential, but the onboarding and verification process is deeply flawed. Our application was rejected without explanation, despite being an established business in good standing with owners who have excellent credit and clean histories. There was no guidance, no recourse, and no meaningful communication; only a generic message saying they would “reach out,” which never happened.
+1. "Strong avoid. They restrict transfers out heavily. I've built up crypto and they now prevent sending outside of Revolut. And now customer service unless you pay to speak to someone." (Strongly avoid. They heavily restrict transfers out. I've built up crypto and they now prevent sending outside of Revolut. And now customer service is only available if you pay to speak to someone.)
+2. "I’ve been a loyal customer for 3 years, but out of nowhere, Revolut decided to close my account. Despite responding promptly to their repeated inquiries, they still went ahead with the closure. It feels like my account was too small for them, and they chose to ‘optimize’ by cutting me off.
+
+To make matters worse, their customer service representatives were rude and unhelpful. They kept pointing to their terms of service, which essentially give Revolut the right to close accounts at their discretion. Very disappointing experience."
+3. "I wanted to sign up to Revolut Business since I am very happy with my personal Revolut App and accounts.  Initially sign up was smoothly until it got to proving proof of the “nature of your business”.  Initially I saw why my proof had been unacceptable, however I meticulously added as is requested an invoice to my customer along side the statement for my business account with their payment.  STILL this apparently doesn’t satisfy EVEN THOUGH it is among the list of way to prove.  I find no way to chat/speak with a human being and finally just gave up on them.  There should be a way to resolve such a simple detail without have to “argue” with AI."
+4. "As soon as you open an account, be prepared for unexpected verifications, account and transaction freezes. Support will respond with something like “we have the right,” and if they don’t like something, they’ll simply block access to your account.
+If you haven’t changed your mind yet — good luck. But this will happen, and it will happen exactly when you urgently need to make a transfer or withdraw cash.
+They also always say, “Don’t worry, the review will only take a couple of days, and you’ll be able to continue your business as soon as our specialists finish.”
+Haha, funny."
+5. "Revolut Business has potential, but the onboarding and verification process is deeply flawed. Our application was rejected without explanation, despite being an established business in good standing with owners who have excellent credit and clean histories. There was no guidance, no recourse, and no meaningful communication; only a generic message saying they would “reach out,” which never happened.
 
 A financial platform should not operate with a black‑box approval process. At minimum, applicants deserve clarity on what triggered a rejection and what steps, if any, can be taken to resolve it. As it stands, the process feels arbitrary and wastes time for legitimate businesses trying to onboard.
 
 I hope the team takes this seriously, because the product itself looks promising; but the current verification workflow undermines trust before the relationship even begins."
-2. "Looks like we get to be added to the list of businesses that they just closed the account without telling us why or giving any reason whatsoever. This is a joke, these people are not really operating a bank. Any business should be aware that they will close your account, they will not tell you why. Looking forward to filing all the proper regulatory complaints and/or exploring legal options."
-3. "corporate verification failed due to repeated bugs. I interacted with Ivan Lopez, showed him screenshots of the stuck verification, and over a period of 6 weeks made no progress. we were keen to use revolut for our US subsidiary after finding it reasonably good for our UK holdco and even the retail product, but are now moving onto other options."
-4. "Most terrible banking experience. I’ve been a business customer from 2021. The features were so basic moving money between my other accounts were expensive and inconvenient. Then, the app got buggy where I could not update KYB. It just wasn’t getting resolved and limited functions. Then, they ask so many dumb questions for every transaction wasting my time. Then, they suddenly introduced Basic Fees in June 2025 without me knowing. I decided to close my account and I followed customer rep’s instructions. While closing the account and during withdraw confirming, they charged another basic fee which they refused to waive. So they made me deposit money to close the account. I’ll be closing my personal account as well."
-5. "I’ve been a loyal customer for 3 years, but out of nowhere, Revolut decided to close my account. Despite responding promptly to their repeated inquiries, they still went ahead with the closure. It feels like my account was too small for them, and they chose to ‘optimize’ by cutting me off.
-
-To make matters worse, their customer service representatives were rude and unhelpful. They kept pointing to their terms of service, which essentially give Revolut the right to close accounts at their discretion. Very disappointing experience."
 
 📊 Changes from last week
 
